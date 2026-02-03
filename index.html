@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HERITAGE OS • Supabase login test</title>
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; background:#0e0e0e; color:#fff; padding:24px; }
+    .box { max-width: 520px; }
+    input, button { display:block; width:100%; margin:10px 0; padding:12px; border-radius:10px; border:1px solid #2a2a2a; background:#141414; color:#fff; }
+    button { cursor:pointer; background:#1f3bff; border:none; }
+    button.secondary { background:#2a2a2a; }
+    pre { white-space: pre-wrap; background:#141414; border:1px solid #2a2a2a; padding:12px; border-radius:10px; margin-top:12px; }
+    .row { display:flex; gap:10px; }
+    .row button { flex:1; }
+    small { color:#aaa; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>Login test (Supabase)</h2>
+    <small>Objectif: se connecter + lire <code>public.profiles</code> (RLS)</small>
+
+    <input id="email" placeholder="email" autocomplete="email" />
+    <input id="password" type="password" placeholder="password" autocomplete="current-password" />
+
+    <div class="row">
+      <button onclick="login()">Login</button>
+      <button class="secondary" onclick="logout()">Logout</button>
+    </div>
+
+    <div class="row">
+      <button class="secondary" onclick="whoami()">Who am I?</button>
+      <button class="secondary" onclick="readProfile()">Read my profile</button>
+    </div>
+
+    <pre id="output">Prêt.</pre>
+  </div>
+
+  <script>
+    const SUPABASE_URL = "https://qltdzmyfluockpadrhrk.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFsdGR6bXlmbHVvY2twYWRyaHJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxMjg2MTEsImV4cCI6MjA4NTcwNDYxMX0._KtfFHRifqRctnbP_-gEx2hh7ZrU87yxXl56fOHoetA";
+
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const out = (x) => {
+      const el = document.getElementById("output");
+      el.textContent = typeof x === "string" ? x : JSON.stringify(x, null, 2);
+    };
+
+    async function login() {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) return out({ step: "login", error: error.message });
+
+      out({ step: "login", ok: true, user: data.user?.id });
+    }
+
+    async function logout() {
+      const { error } = await supabase.auth.signOut();
+      if (error) return out({ step: "logout", error: error.message });
+      out({ step: "logout", ok: true });
+    }
+
+    async function whoami() {
+      const { data, error } = await supabase.auth.getUser();
+      if (error) return out({ step: "whoami", error: error.message });
+      out({ step: "whoami", user: data.user ? { id: data.user.id, email: data.user.email } : null });
+    }
+
+    async function readProfile() {
+      // RLS attendu: ne renvoie que le profil de auth.uid()
+      const { data: userData } = await supabase.auth.getUser();
+      const uid = userData?.user?.id;
+      if (!uid) return out({ step: "readProfile", error: "Not logged in" });
+
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("id, role, created_at")
+        .eq("id", uid)
+        .single();
+
+      if (error) return out({ step: "readProfile", uid, error: error.message });
+      out({ step: "readProfile", uid, profile: data });
+    }
+  </script>
+</body>
+</html>
