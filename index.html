@@ -1,119 +1,129 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>HERITAGE OS • Connexion</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<title>HERITAGE OS</title>
 
-  <style>
-    body { font-family: system-ui, -apple-system, sans-serif; background:#0e0e0e; color:#fff; padding:32px; }
-    .box { max-width: 560px; }
-    input, button {
-      width:100%; padding:12px; margin:10px 0; border-radius:10px;
-      border:1px solid #2a2a2a; background:#141414; color:#fff;
-    }
-    button { cursor:pointer; }
-    .row { display:flex; gap:10px; }
-    .row button { flex:1; }
-    pre { background:#111; border:1px solid #2a2a2a; padding:14px; border-radius:10px; white-space:pre-wrap; }
-    .muted { color:#aaa; font-size: 14px; margin-top: 6px; line-height: 1.4; }
-    .hr { height:1px; background:#222; margin:16px 0; }
-  </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+body {
+background: #0b0b0b;
+color: white;
+font-family: system-ui;
+display: flex;
+justify-content: center;
+align-items: center;
+height: 100vh;
+margin: 0;
+}
+
+.container {
+width: 320px;
+}
+
+input, button {
+width: 100%;
+padding: 12px;
+margin: 6px 0;
+background: #111;
+border: 1px solid #333;
+color: white;
+}
+
+button {
+cursor: pointer;
+background: #1a1a1a;
+}
+
+button:hover {
+background: #222;
+}
+
+#status {
+margin-top: 10px;
+font-size: 12px;
+color: #888;
+}
+</style>
+
 </head>
-
 <body>
-  <div class="box">
-    <h1>Connexion</h1>
-    <div class="muted">
-      Flux: <b>Créer un compte</b> → <b>confirmer l’email</b> → <b>se connecter</b>.
-    </div>
 
-    <input id="email" placeholder="Adresse e-mail" autocomplete="email" />
-    <input id="password" type="password" placeholder="Mot de passe" autocomplete="new-password" />
-    <input id="passwordConfirm" type="password" placeholder="Confirmer le mot de passe (pour l’inscription)" autocomplete="new-password" />
+<div class="container">
 
-    <div class="row">
-      <button id="btnSignup">Créer mon compte</button>
-      <button id="btnLogin">Se connecter</button>
-    </div>
+<input id="email" placeholder="email">
+<input id="password" type="password" placeholder="password">
 
-    <button id="btnLogout">Se déconnecter</button>
+<button onclick="signup()">Créer compte</button>
+<button onclick="login()">Connexion</button>
+<button onclick="logout()">Logout</button>
 
-    <div class="hr"></div>
+<div id="status">Initialisation...</div>
 
-    <pre id="output">Prêt.</pre>
-    <div class="muted">
-      Si la confirmation e-mail est activée sur Supabase: vous devez cliquer le lien reçu avant de pouvoir vous connecter.
-    </div>
-  </div>
+</div>
 
-  <script>
-    // ✅ Ton projet
-    const SUPABASE_URL = "https://qltdzmyfluockpadrhrk.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFsdGR6bXlmbHVvY2twYWRyaHJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxMjg2MTEsImV4cCI6MjA4NTcwNDYxMX0._KtfFHRifqRctnbP_-gEx2hh7ZrU87yxXl56fOHoetA";
+<script>
 
-    const outEl = document.getElementById("output");
-    function out(obj) {
-      const ts = new Date().toISOString().slice(11,19);
-      const line = typeof obj === "string" ? obj : JSON.stringify(obj, null, 2);
-      outEl.textContent = `[${ts}] ${line}`;
-      console.log(obj);
-    }
+const SUPABASE_URL = "https://qltdzmyfluockpadrhrk.supabase.co"
 
-    function getInputs() {
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value;
-      const passwordConfirm = document.getElementById("passwordConfirm").value;
-      return { email, password, passwordConfirm };
-    }
+const SUPABASE_KEY = "sb_publishable_rwQseMv_s2m9agArPmsYmQ_rL18PNDn"
 
-    try {
-      if (!window.supabase) throw new Error("Le module Supabase n’a pas chargé correctement.");
-      const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-      out("Client Supabase prêt.");
+const client = supabase.createClient(
+SUPABASE_URL,
+SUPABASE_KEY
+)
 
-      async function signup() {
-        const { email, password, passwordConfirm } = getInputs();
-        if (!email || !password) return out({ etape:"inscription", erreur:"Adresse e-mail / mot de passe manquants" });
-        if (password.length < 8) return out({ etape:"inscription", erreur:"Mot de passe trop court (minimum 8 caractères)" });
-        if (password !== passwordConfirm) return out({ etape:"inscription", erreur:"Les deux mots de passe ne correspondent pas" });
+document.getElementById("status").innerText = "Client prêt."
 
-        const { data, error } = await supabase.auth.signUp({ email, password });
-        if (error) return out({ etape:"inscription", erreur: error.message });
+async function signup() {
 
-        out({
-          etape: "inscription",
-          ok: true,
-          utilisateur: data.user ? { id: data.user.id, email: data.user.email } : null,
-          note: "Si nécessaire, confirmez l’e-mail reçu, puis connectez-vous."
-        });
-      }
+const email = emailInput()
+const password = passwordInput()
 
-      async function login() {
-        const { email, password } = getInputs();
-        if (!email || !password) return out({ etape:"connexion", erreur:"Adresse e-mail / mot de passe manquants" });
+const { error } = await client.auth.signUp({
+email,
+password
+})
 
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) return out({ etape:"connexion", erreur: error.message });
+status(error ? error.message : "Compte créé.")
+}
 
-        out({ etape:"connexion", ok:true, utilisateur: { id: data.user?.id, email: data.user?.email } });
-      }
+async function login() {
 
-      async function logout() {
-        const { error } = await supabase.auth.signOut();
-        if (error) return out({ etape:"deconnexion", erreur: error.message });
-        out({ etape:"deconnexion", ok:true });
-      }
+const email = emailInput()
+const password = passwordInput()
 
-      document.getElementById("btnSignup").addEventListener("click", signup);
-      document.getElementById("btnLogin").addEventListener("click", login);
-      document.getElementById("btnLogout").addEventListener("click", logout);
+const { error } = await client.auth.signInWithPassword({
+email,
+password
+})
 
-    } catch (e) {
-      out({ fatal: true, erreur: e.message });
-    }
-  </script>
+status(error ? error.message : "Connecté.")
+}
+
+async function logout() {
+
+await client.auth.signOut()
+
+status("Déconnecté.")
+}
+
+function emailInput() {
+return document.getElementById("email").value
+}
+
+function passwordInput() {
+return document.getElementById("password").value
+}
+
+function status(msg) {
+document.getElementById("status").innerText = msg
+}
+
+</script>
+
 </body>
 </html>
