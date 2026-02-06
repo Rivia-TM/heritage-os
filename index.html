@@ -33,6 +33,11 @@
       <button id="btnLogout">Logout</button>
     </div>
 
+    <!-- ✅ AJOUT: bouton Sign up -->
+    <div class="row">
+      <button id="btnSignup">Sign up</button>
+    </div>
+
     <div class="row">
       <button id="btnWho">Who am I?</button>
       <button id="btnProfile">Read my profile</button>
@@ -70,6 +75,23 @@
         out({ step:"login", ok:true, user: { id: data.user?.id, email: data.user?.email } });
       }
 
+      // ✅ AJOUT: Sign up (création user B dans le MÊME projet)
+      async function signUp() {
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+        if (!email || !password) return out({ step:"signup", error:"email/password manquants" });
+
+        const { data, error } = await supabase.auth.signUp({ email, password });
+        if (error) return out({ step:"signup", error: error.message });
+
+        out({
+          step: "signup",
+          ok: true,
+          user: { id: data.user?.id, email: data.user?.email },
+          note: "Si confirm email est ON, vérifie ta boîte mail. Sinon Auto-confirm ok."
+        });
+      }
+
       async function logout() {
         const { error } = await supabase.auth.signOut();
         if (error) return out({ step:"logout", error: error.message });
@@ -100,6 +122,7 @@
       // Bind boutons
       document.getElementById("btnLogin").addEventListener("click", login);
       document.getElementById("btnLogout").addEventListener("click", logout);
+      document.getElementById("btnSignup").addEventListener("click", signUp); // ✅ AJOUT
       document.getElementById("btnWho").addEventListener("click", whoami);
       document.getElementById("btnProfile").addEventListener("click", readProfile);
 
