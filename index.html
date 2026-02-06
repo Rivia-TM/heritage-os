@@ -3,51 +3,54 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>HERITAGE OS • Supabase login test</title>
+  <title>HERITAGE OS • Connexion</title>
 
-  <!-- CDN officiel pratique -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     body { font-family: system-ui, -apple-system, sans-serif; background:#0e0e0e; color:#fff; padding:32px; }
     .box { max-width: 560px; }
-    input, button { width:100%; padding:12px; margin:10px 0; border-radius:10px; border:1px solid #2a2a2a; background:#141414; color:#fff; }
+    input, button {
+      width:100%; padding:12px; margin:10px 0; border-radius:10px;
+      border:1px solid #2a2a2a; background:#141414; color:#fff;
+    }
     button { cursor:pointer; }
     .row { display:flex; gap:10px; }
     .row button { flex:1; }
     pre { background:#111; border:1px solid #2a2a2a; padding:14px; border-radius:10px; white-space:pre-wrap; }
-    .muted { color:#aaa; font-size: 14px; margin-top: 6px; }
+    .muted { color:#aaa; font-size: 14px; margin-top: 6px; line-height: 1.4; }
+    .hr { height:1px; background:#222; margin:16px 0; }
   </style>
 </head>
 
 <body>
   <div class="box">
-    <h1>Login test (Supabase)</h1>
-    <div class="muted">Objectif: se connecter + lire <code>public.profiles</code> (RLS)</div>
-
-    <input id="email" placeholder="email" autocomplete="email" />
-    <input id="password" type="password" placeholder="password" autocomplete="current-password" />
-
-    <div class="row">
-      <button id="btnLogin">Login</button>
-      <button id="btnLogout">Logout</button>
+    <h1>Connexion</h1>
+    <div class="muted">
+      Flux: <b>Créer un compte</b> → <b>confirmer l’email</b> → <b>se connecter</b>.
     </div>
 
-    <!-- ✅ AJOUT: bouton Sign up -->
-    <div class="row">
-      <button id="btnSignup">Sign up</button>
-    </div>
+    <input id="email" placeholder="Adresse e-mail" autocomplete="email" />
+    <input id="password" type="password" placeholder="Mot de passe" autocomplete="new-password" />
+    <input id="passwordConfirm" type="password" placeholder="Confirmer le mot de passe (pour l’inscription)" autocomplete="new-password" />
 
     <div class="row">
-      <button id="btnWho">Who am I?</button>
-      <button id="btnProfile">Read my profile</button>
+      <button id="btnSignup">Créer mon compte</button>
+      <button id="btnLogin">Se connecter</button>
     </div>
+
+    <button id="btnLogout">Se déconnecter</button>
+
+    <div class="hr"></div>
 
     <pre id="output">Prêt.</pre>
+    <div class="muted">
+      Si la confirmation e-mail est activée sur Supabase: vous devez cliquer le lien reçu avant de pouvoir vous connecter.
+    </div>
   </div>
 
   <script>
-    // ✅ TON projet
+    // ✅ Ton projet
     const SUPABASE_URL = "https://qltdzmyfluockpadrhrk.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFsdGR6bXlmbHVvY2twYWRyaHJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxMjg2MTEsImV4cCI6MjA4NTcwNDYxMX0._KtfFHRifqRctnbP_-gEx2hh7ZrU87yxXl56fOHoetA";
 
@@ -59,75 +62,57 @@
       console.log(obj);
     }
 
+    function getInputs() {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const passwordConfirm = document.getElementById("passwordConfirm").value;
+      return { email, password, passwordConfirm };
+    }
+
     try {
-      // Le CDN expose window.supabase
-      if (!window.supabase) throw new Error("Supabase CDN non chargé (window.supabase absent)");
+      if (!window.supabase) throw new Error("Le module Supabase n’a pas chargé correctement.");
       const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-      out("JS chargé. Client Supabase initialisé.");
+      out("Client Supabase prêt.");
 
-      async function login() {
-        const email = document.getElementById("email").value.trim();
-        const password = document.getElementById("password").value;
-        if (!email || !password) return out({ step:"login", error:"email/password manquants" });
-
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) return out({ step:"login", error: error.message });
-        out({ step:"login", ok:true, user: { id: data.user?.id, email: data.user?.email } });
-      }
-
-      // ✅ AJOUT: Sign up (création user B dans le MÊME projet)
-      async function signUp() {
-        const email = document.getElementById("email").value.trim();
-        const password = document.getElementById("password").value;
-        if (!email || !password) return out({ step:"signup", error:"email/password manquants" });
+      async function signup() {
+        const { email, password, passwordConfirm } = getInputs();
+        if (!email || !password) return out({ etape:"inscription", erreur:"Adresse e-mail / mot de passe manquants" });
+        if (password.length < 8) return out({ etape:"inscription", erreur:"Mot de passe trop court (minimum 8 caractères)" });
+        if (password !== passwordConfirm) return out({ etape:"inscription", erreur:"Les deux mots de passe ne correspondent pas" });
 
         const { data, error } = await supabase.auth.signUp({ email, password });
-        if (error) return out({ step:"signup", error: error.message });
+        if (error) return out({ etape:"inscription", erreur: error.message });
 
         out({
-          step: "signup",
+          etape: "inscription",
           ok: true,
-          user: { id: data.user?.id, email: data.user?.email },
-          note: "Si confirm email est ON, vérifie ta boîte mail. Sinon Auto-confirm ok."
+          utilisateur: data.user ? { id: data.user.id, email: data.user.email } : null,
+          note: "Si nécessaire, confirmez l’e-mail reçu, puis connectez-vous."
         });
+      }
+
+      async function login() {
+        const { email, password } = getInputs();
+        if (!email || !password) return out({ etape:"connexion", erreur:"Adresse e-mail / mot de passe manquants" });
+
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) return out({ etape:"connexion", erreur: error.message });
+
+        out({ etape:"connexion", ok:true, utilisateur: { id: data.user?.id, email: data.user?.email } });
       }
 
       async function logout() {
         const { error } = await supabase.auth.signOut();
-        if (error) return out({ step:"logout", error: error.message });
-        out({ step:"logout", ok:true });
+        if (error) return out({ etape:"deconnexion", erreur: error.message });
+        out({ etape:"deconnexion", ok:true });
       }
 
-      async function whoami() {
-        const { data, error } = await supabase.auth.getUser();
-        if (error) return out({ step:"whoami", error: error.message });
-        out({ step:"whoami", user: data.user ? { id: data.user.id, email: data.user.email } : null });
-      }
-
-      async function readProfile() {
-        const { data: userData } = await supabase.auth.getUser();
-        const uid = userData?.user?.id;
-        if (!uid) return out({ step:"readProfile", error:"Not logged in" });
-
-        const { data, error } = await supabase
-          .from("profiles")
-          .select("id, role, created_at")
-          .eq("id", uid)
-          .single();
-
-        if (error) return out({ step:"readProfile", uid, error: error.message });
-        out({ step:"readProfile", uid, profile: data });
-      }
-
-      // Bind boutons
+      document.getElementById("btnSignup").addEventListener("click", signup);
       document.getElementById("btnLogin").addEventListener("click", login);
       document.getElementById("btnLogout").addEventListener("click", logout);
-      document.getElementById("btnSignup").addEventListener("click", signUp); // ✅ AJOUT
-      document.getElementById("btnWho").addEventListener("click", whoami);
-      document.getElementById("btnProfile").addEventListener("click", readProfile);
 
     } catch (e) {
-      out({ fatal: true, error: e.message });
+      out({ fatal: true, erreur: e.message });
     }
   </script>
 </body>
