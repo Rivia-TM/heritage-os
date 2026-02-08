@@ -1,20 +1,37 @@
-// HERITAGE OS - Apple-like login flow (email -> password)
-// Bloc 59: palette + calm spacing handled by css/heritage.css
+// HERITAGE OS - Apple-like login flow (step 1 email, step 2 password)
+// Bloc 59 palette + Inter. Logo is an asset (assets/heritageos-logo.png).
 
 (function () {
-  const $ = (s) => document.querySelector(s);
+  const $ = (sel) => document.querySelector(sel);
+
+  const state = { step: 1 };
+
+  // Supabase config: put your URL + anon key here (anon key is public by design)
+  // Example:
+  // const SUPABASE_URL = "https://xxxx.supabase.co";
+  // const SUPABASE_ANON_KEY = "eyJ..."; 
+  const SUPABASE_URL = "";
+  const SUPABASE_ANON_KEY = "";
+
+  const supabase =
+    (window.supabase && SUPABASE_URL && SUPABASE_ANON_KEY)
+      ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+      : null;
 
   const els = {
     email: $("#email"),
     password: $("#password"),
     remember: $("#remember"),
+    title: $("#title"),
+
     stepEmail: $("#stepEmail"),
     stepPassword: $("#stepPassword"),
+
     arrowEmail: $("#arrowEmail"),
     arrowPassword: $("#arrowPassword"),
+
     forgot: $("#forgot"),
-    createEmail: $("#createAccountEmail"),
-    createPassword: $("#createAccountPassword"),
+    create: $("#createAccount"),
     status: $("#status"),
   };
 
@@ -32,110 +49,131 @@
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
   }
 
-  function goEmailStep() {
-    els.stepEmail.classList.remove("hidden");
-    els.stepPassword.classList.add("hidden");
-    setStatus("");
-    setTimeout(() => els.email && els.email.focus(), 20);
-  }
+  function goStep(step) {
+    state.step = step;
 
-  function goPasswordStep() {
+    if (step === 1) {
+      els.stepEmail.classList.remove("hidden");
+      els.stepPassword.classList.add("hidden");
+      setStatus("");
+      requestAnimationFrame(() => els.email && els.email.focus());
+      return;
+    }
+
     els.stepEmail.classList.add("hidden");
     els.stepPassword.classList.remove("hidden");
     setStatus("");
-    setTimeout(() => els.password && els.password.focus(), 20);
+    requestAnimationFrame(() => els.password && els.password.focus());
   }
 
-  // ---- Supabase (client-side anon key ONLY)
-  // IMPORTANT:
-  // - URL + ANON KEY go here (client-safe).
-  // - Never put service_role key in the browser.
-  const SUPABASE_URL = window.__SUPABASE_URL || "";
-  const SUPABASE_ANON_KEY = window.__SUPABASE_ANON_KEY || "";
-
-  const supabase =
-    (SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase)
-      ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-      : null;
-
-  async function signInEmailPassword(email, password) {
-    if (!supabase) {
-      setStatus("Configuration Supabase manquante (URL / ANON KEY).", true);
-      return;
-    }
-
-    setStatus("Connexion…");
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) {
-        setStatus("Identifiants incorrects.", true);
-        return;
-      }
-
-      // Remember-me hook:
-      // Supabase gère déjà une session persistante par défaut.
-      // Si tu veux un mode "session uniquement" quand la case n'est pas cochée,
-      // on le fera après (c’est un réglage fin, pas un bricolage).
-      setStatus("Connecté.");
-      // TODO: redirect
-      // window.location.href = "/app";
-      console.log("Signed in:", data);
-    } catch (e) {
-      setStatus("Erreur réseau. Réessaie.", true);
-    }
-  }
-
-  // ---- Events
-  els.arrowEmail.addEventListener("click", () => {
-    const email = normalizeEmail(els.email.value);
-    if (!validateEmail(email)) {
-      setStatus("Adresse e-mail invalide.", true);
-      els.email.focus();
-      return;
-    }
-    setStatus("");
-    goPasswordStep();
-  });
-
-  els.arrowPassword.addEventListener("click", () => {
+  async function doLogin() {
     const email = normalizeEmail(els.email.value);
     const password = (els.password.value || "").trim();
 
     if (!validateEmail(email)) {
       setStatus("Adresse e-mail invalide.", true);
-      goEmailStep();
+      goStep(1);
       return;
     }
     if (!password) {
-      setStatus("Entre ton mot de passe.", true);
-      els.password.focus();
+      setStatus("Mot de passe requis.", true);
       return;
     }
-    signInEmailPassword(email, password);
-  });
+
+    if (!supabase) {
+      setStatus("Supabase non configuré (URL + anon key).", true);
+      return;
+    }
+
+    setStatus("Connexion…");
+
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+      if (error) {
+        setStatus("Identifiants incorrects.", true);
+        return;
+      }
+
+      // Remember me (best-effort, client-side hint)
+      if (els.remember && els.remember.checked) {
+        localStorage.setItem("heritageos_remember", "1");
+        localStorage.setItem("heritageos_email", email);
+      } else {
+        localStorage.removeItem("heritageos_remember");
+        localStorage.removeItem("heritageos_email");
+      }
+
+      setStatus("Connecté.");
+      // TODO: redirect to your app space
+      // window.location.href = "/app.html";
+      console.log("Signed in:", data);
+    } catch (e) {
+      console.error(e);
+      setStatus("Erreur de connexion.", true);
+    }
+  }
+
+  function handleEmailContinue() {
+    const email = normalizeEmail(els.email.value);
+    if (!validateEmail(email)) {
+      setStatus("Adresse e-mail invalide.", true);
+      return;
+    }
+    goStep(2);
+  }
+
+  // Prefill email if remembered
+  try {
+    const remember = localStorage.getItem("heritageos_remember") === "1";
+    const email = localStorage.getItem("heritageos_email") || "";
+    if (remember && email && els.email) {
+      els.email.value = email;
+      if (els.remember) els.remember.checked = true;
+    }
+  } catch (_) {}
+
+  // Events
+  els.arrowEmail.addEventListener("click", handleEmailContinue);
+  els.arrowPassword.addEventListener("click", doLogin);
 
   els.email.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") els.arrowEmail.click();
+    if (e.key === "Enter") handleEmailContinue();
   });
 
   els.password.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") els.arrowPassword.click();
+    if (e.key === "Enter") doLogin();
   });
 
-  els.forgot.addEventListener("click", (e) => {
+  els.forgot.addEventListener("click", async (e) => {
     e.preventDefault();
-    setStatus("Flux “mot de passe oublié” à brancher.", false);
-    // TODO: supabase.auth.resetPasswordForEmail(email)
+
+    const email = normalizeEmail(els.email.value);
+    if (!validateEmail(email)) {
+      setStatus("Saisis ton e-mail d’abord.", true);
+      goStep(1);
+      return;
+    }
+    if (!supabase) {
+      setStatus("Supabase non configuré (URL + anon key).", true);
+      return;
+    }
+
+    setStatus("Envoi du lien…");
+    const { error } = await supabase.auth.resetPasswordForEmail(email);
+    if (error) {
+      setStatus("Impossible d’envoyer le lien.", true);
+      return;
+    }
+    setStatus("Lien envoyé si l’e-mail existe.");
   });
 
-  function onCreate(e){
+  els.create.addEventListener("click", (e) => {
     e.preventDefault();
-    setStatus("Flux “créer un compte” à brancher.", false);
-    // TODO: redirect/signup
-  }
-  els.createEmail.addEventListener("click", onCreate);
-  els.createPassword.addEventListener("click", onCreate);
+    // TODO: route to signup page
+    setStatus("Création de compte: à brancher sur ta page d’inscription.");
+  });
 
   // Init
-  goEmailStep();
+  goStep(1);
 })();

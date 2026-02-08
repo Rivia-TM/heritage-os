@@ -3,71 +3,73 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>HÉRITAGE OS</title>
+  <title>HERITAGE OS</title>
 
+  <!-- Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Cinzel:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <link rel="stylesheet" href="css/heritage.css" />
 </head>
-<body>
-  <main>
-    <section class="shell" aria-label="Connexion Héritage OS">
 
-      <!-- IMPORTANT: remplace assets/heritage-logo.jpg par TON fichier exact -->
-      <img class="brand" src="assets/heritage-logo.jpg" alt="Héritage OS" />
+<body>
+  <main class="page">
+    <section class="wrap">
+
+      <!-- Signature logo asset (must exist) -->
+      <div class="brand" aria-label="Héritage OS">
+        <img src="assets/heritageos-logo.png" alt="Héritage OS" />
+      </div>
 
       <h1 id="title">Connectez-vous<br>pour accéder à votre<br>espace.</h1>
 
-      <div class="form">
-
-        <!-- STEP 1: EMAIL -->
+      <div class="form" role="form" aria-label="Connexion">
+        <!-- STEP 1: email -->
         <div id="stepEmail">
           <div class="field">
-            <input id="email" type="email" inputmode="email" autocomplete="email"
+            <input id="email" class="input" type="email" autocomplete="username" inputmode="email"
                    placeholder="Adresse e-mail" aria-label="Adresse e-mail" />
             <button id="arrowEmail" class="arrow" type="button" aria-label="Continuer">
               →
             </button>
           </div>
-
-          <div class="bottom">
-            Vous n’avez pas de compte Héritage OS ? <a id="createAccountEmail" href="#" rel="nofollow">Créer un compte Héritage OS</a>
-          </div>
         </div>
 
-        <!-- STEP 2: PASSWORD -->
+        <!-- STEP 2: password -->
         <div id="stepPassword" class="hidden">
           <div class="field">
-            <input id="password" type="password" autocomplete="current-password"
+            <input id="password" class="input" type="password" autocomplete="current-password"
                    placeholder="Mot de passe" aria-label="Mot de passe" />
             <button id="arrowPassword" class="arrow" type="button" aria-label="Se connecter">
               →
             </button>
           </div>
+        </div>
 
-          <div class="meta">
-            <label class="checkbox">
-              <input id="remember" type="checkbox" />
-              <span>Se souvenir de moi</span>
-            </label>
+        <!-- Apple-like lines under the bar -->
+        <div class="meta">
+          <label class="remember">
+            <input id="remember" type="checkbox" />
+            <span>Se souvenir de moi</span>
+          </label>
 
-            <a id="forgot" href="#" rel="nofollow">Mot de passe oublié</a>
-          </div>
-
-          <div class="bottom">
-            Vous n’avez pas de compte Héritage OS ? <a id="createAccountPassword" href="#" rel="nofollow">Créer un compte Héritage OS</a>
-          </div>
+          <a id="forgot" href="#" aria-label="Mot de passe oublié">Mot de passe oublié&nbsp;?</a>
         </div>
 
         <div id="status" class="status" aria-live="polite"></div>
-      </div>
 
+        <div class="bottom">
+          <span>Vous n’avez pas de compte Héritage.os&nbsp;? </span>
+          <a id="createAccount" href="#">Créer un compte Héritage.os</a>
+        </div>
+      </div>
     </section>
   </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/auth.js"></script>
 </body>
 </html>
