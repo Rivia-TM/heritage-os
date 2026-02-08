@@ -1,27 +1,27 @@
 :root{
-  --bg:#2D4A5E;          /* Bleu signature */
-  --bg2:#243D4E;         /* plus sombre */
-  --text:#F2F1ED;        /* Ivoire signature */
-  --text2:rgba(242,241,237,.72);
-  --line:rgba(242,241,237,.22);
-  --line2:rgba(242,241,237,.32);
-  --focus:rgba(242,241,237,.75);
+  --bg:#2D4A5E;             /* Bloc 59 bleu signature */
+  --bg-dark:#243D4E;        /* variante sombre autorisée */
+  --bg-light:#3A5D73;       /* variante claire autorisée */
+  --ivory:#F2F1ED;          /* Bloc 59 ivoire */
+  --ivory-soft:rgba(242,241,237,.72);
+  --stroke:rgba(242,241,237,.28);
+  --stroke-strong:rgba(242,241,237,.44);
+  --field:rgba(242,241,237,.08);
+  --field-hover:rgba(242,241,237,.11);
 }
 
-*{ box-sizing:border-box; }
-
-html,body{ height:100%; }
-
+*{box-sizing:border-box}
+html,body{height:100%}
 body{
   margin:0;
   background:var(--bg);
-  color:var(--text);
-  font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  color:var(--ivory);
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   font-weight:300;
-  letter-spacing:0.01em;
+  letter-spacing:0.2px;
 }
 
-.page{
+main{
   min-height:100%;
   display:flex;
   align-items:center;
@@ -30,175 +30,148 @@ body{
 }
 
 .shell{
-  width:min(520px, 100%);
-  padding:0 10px;
-}
-
-/* Signature en haut, discrète, logique Apple (présence, pas démonstration) */
-.brand{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  margin-bottom:26px;
-  opacity:.95;
-}
-
-.brand .wordmark{
-  font-size:12px;
-  letter-spacing:.18em;
-  text-transform:uppercase;
-  color:var(--text2);
-}
-
-/* Bloc central */
-.panel{
-  width:min(420px, 100%);
-  margin:0 auto;
+  width:min(560px, 92vw);
   text-align:center;
 }
 
+.brand{
+  display:block;
+  margin:0 auto 20px auto;
+  width:min(420px, 78vw);
+  height:auto;
+  opacity:.95;
+  user-select:none;
+  -webkit-user-drag:none;
+}
+
 h1{
-  margin:0 0 10px 0;
-  font-size:44px;
-  line-height:1.05;
-  font-weight:400;
-  letter-spacing:-0.02em;
-}
-
-.sub{
-  margin:0 0 28px 0;
-  font-size:18px;
-  color:var(--text2);
+  margin:0 0 22px 0;
+  font-size:56px;
+  line-height:1.02;
   font-weight:300;
+  letter-spacing:-0.6px;
 }
 
-/* Champs Apple-like: grand, simple, net */
-.fieldWrap{
-  margin:0 auto;
-  width:min(420px, 100%);
+@media (max-width:520px){
+  h1{font-size:42px}
+}
+
+.form{
+  margin:26px auto 10px auto;
+  width:min(420px, 92vw);
 }
 
 .field{
   position:relative;
   display:flex;
   align-items:center;
-  border:1px solid var(--line);
-  border-radius:12px;
-  height:52px;
-  padding:0 10px 0 14px;
-  background:rgba(0,0,0,0.06);
+  width:100%;
+  border:1px solid var(--stroke);
+  border-radius:14px;
+  background:var(--field);
+  transition:background .18s ease, border-color .18s ease;
+  backdrop-filter:saturate(120%) blur(6px);
 }
 
 .field:focus-within{
-  border-color:var(--focus);
+  border-color:var(--stroke-strong);
+  background:var(--field-hover);
 }
 
-.field input{
+input{
   width:100%;
-  border:none;
-  outline:none;
+  border:0;
+  outline:0;
   background:transparent;
-  color:var(--text);
+  color:var(--ivory);
+  padding:16px 48px 16px 18px;
   font-size:16px;
   font-weight:300;
 }
 
-.field input::placeholder{
-  color:rgba(242,241,237,.55);
+input::placeholder{color:rgba(242,241,237,.55)}
+input:-webkit-autofill{
+  -webkit-text-fill-color:var(--ivory);
+  transition: background-color 999999s ease-in-out 0s;
 }
 
-.arrowBtn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
+.arrow{
+  position:absolute;
+  right:10px;
   width:34px;
   height:34px;
-  border-radius:18px;
-  border:1px solid var(--line);
-  background:rgba(0,0,0,0.08);
-  color:var(--text);
+  border-radius:999px;
+  border:1px solid rgba(242,241,237,.35);
+  background:rgba(242,241,237,.06);
+  color:var(--ivory);
+  display:flex;
+  align-items:center;
+  justify-content:center;
   cursor:pointer;
+  transition:transform .12s ease, background .18s ease, border-color .18s ease;
 }
 
-.arrowBtn:hover{
-  border-color:var(--line2);
+.arrow:hover{
+  background:rgba(242,241,237,.10);
+  border-color:rgba(242,241,237,.55);
 }
 
-.arrowBtn:active{
-  transform:translateY(1px);
-}
+.arrow:active{transform:scale(.98)}
 
-/* Options sous champs */
-.optionsRow{
-  width:min(420px, 100%);
+.meta{
+  width:min(420px, 92vw);
   margin:14px auto 0 auto;
+  text-align:left;
   display:flex;
   align-items:center;
   justify-content:space-between;
   gap:12px;
-  text-align:left;
+  font-size:13px;
+  color:var(--ivory-soft);
 }
 
-.remember{
+.checkbox{
   display:flex;
   align-items:center;
   gap:10px;
-  color:var(--text2);
-  font-size:14px;
   user-select:none;
 }
 
-.remember input{
+.checkbox input{
   width:16px;
   height:16px;
+  padding:0;
+  margin:0;
   accent-color:rgba(242,241,237,.85);
 }
 
-.smallLink{
-  color:var(--text2);
-  font-size:14px;
+a{
+  color:var(--ivory-soft);
   text-decoration:none;
 }
 
-.smallLink:hover{
-  text-decoration:underline;
-  color:rgba(242,241,237,.9);
-}
+a:hover{color:rgba(242,241,237,.92)}
 
-/* Ligne “créer un compte” */
-.createRow{
-  width:min(420px, 100%);
-  margin:18px auto 0 auto;
-  color:var(--text2);
-  font-size:14px;
-  text-align:center;
-}
-
-.createRow a{
-  color:rgba(242,241,237,.9);
-  text-decoration:none;
-}
-
-.createRow a:hover{
-  text-decoration:underline;
-}
-
-/* Status */
-.status{
-  width:min(420px, 100%);
-  margin:14px auto 0 auto;
+.bottom{
+  width:min(420px, 92vw);
+  margin:16px auto 0 auto;
   font-size:13px;
-  color:var(--text2);
+  color:var(--ivory-soft);
+  line-height:1.4;
+}
+
+.bottom a{
+  color:rgba(242,241,237,.86);
+}
+
+.status{
+  width:min(420px, 92vw);
+  margin:16px auto 0 auto;
+  font-size:13px;
+  color:var(--ivory-soft);
   opacity:0;
-  transition:opacity .18s ease;
+  transition:opacity .16s ease;
   min-height:18px;
 }
 
-/* Steps */
-.hidden{ display:none; }
-
-/* Mobile */
-@media (max-width:520px){
-  h1{ font-size:36px; }
-  .sub{ font-size:16px; }
-}
+.hidden{display:none !important}
