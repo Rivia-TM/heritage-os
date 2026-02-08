@@ -1,129 +1,69 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HERITAGE OS</title>
 
-<title>HERITAGE OS</title>
+  <!-- Inter (UI) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<style>
-body {
-background: #0b0b0b;
-color: white;
-font-family: system-ui;
-display: flex;
-justify-content: center;
-align-items: center;
-height: 100vh;
-margin: 0;
-}
-
-.container {
-width: 320px;
-}
-
-input, button {
-width: 100%;
-padding: 12px;
-margin: 6px 0;
-background: #111;
-border: 1px solid #333;
-color: white;
-}
-
-button {
-cursor: pointer;
-background: #1a1a1a;
-}
-
-button:hover {
-background: #222;
-}
-
-#status {
-margin-top: 10px;
-font-size: 12px;
-color: #888;
-}
-</style>
-
+  <link rel="stylesheet" href="css/heritage.css" />
 </head>
 <body>
+  <main class="page">
+    <div class="shell">
 
-<div class="container">
+      <!-- Signature en haut (logique Apple) -->
+      <div class="brand" aria-hidden="true">
+        <div class="wordmark">HERITAGE OS</div>
+      </div>
 
-<input id="email" placeholder="email">
-<input id="password" type="password" placeholder="password">
+      <section class="panel" aria-label="Connexion Héritage OS">
+        <h1 id="title">Connectez-vous pour accéder à votre espace.</h1>
+        <p class="sub" id="subtitle">Connectez-vous à Héritage OS</p>
 
-<button onclick="signup()">Créer compte</button>
-<button onclick="login()">Connexion</button>
-<button onclick="logout()">Logout</button>
+        <!-- STEP 1: Email -->
+        <div id="stepEmail" class="fieldWrap">
+          <div class="field">
+            <input id="email" type="email" inputmode="email" autocomplete="username" placeholder="E-mail ou numéro de téléphone" />
+            <button id="arrowEmail" class="arrowBtn" aria-label="Continuer">
+              &#10132;
+            </button>
+          </div>
+        </div>
 
-<div id="status">Initialisation...</div>
+        <!-- STEP 2: Password -->
+        <div id="stepPassword" class="fieldWrap hidden">
+          <div class="field">
+            <input id="password" type="password" autocomplete="current-password" placeholder="Mot de passe" />
+            <button id="arrowPassword" class="arrowBtn" aria-label="Se connecter">
+              &#10132;
+            </button>
+          </div>
 
-</div>
+          <div class="optionsRow">
+            <label class="remember">
+              <input id="remember" type="checkbox" />
+              <span>Se souvenir de moi</span>
+            </label>
 
-<script>
+            <a id="forgot" class="smallLink" href="#" target="_self" rel="nofollow">Mot de passe oublié ?</a>
+          </div>
+        </div>
 
-const SUPABASE_URL = "https://qltdzmyfluockpadrhrk.supabase.co"
+        <div class="createRow">
+          Vous n’avez pas de compte Héritage OS&nbsp;?
+          <a id="createAccount" href="#" target="_self" rel="nofollow">Créer un compte Héritage OS</a>
+        </div>
 
-const SUPABASE_KEY = "sb_publishable_rwQseMv_s2m9agArPmsYmQ_rL18PNDn"
+        <div id="status" class="status" role="status" aria-live="polite"></div>
+      </section>
+    </div>
+  </main>
 
-const client = supabase.createClient(
-SUPABASE_URL,
-SUPABASE_KEY
-)
-
-document.getElementById("status").innerText = "Client prêt."
-
-async function signup() {
-
-const email = emailInput()
-const password = passwordInput()
-
-const { error } = await client.auth.signUp({
-email,
-password
-})
-
-status(error ? error.message : "Compte créé.")
-}
-
-async function login() {
-
-const email = emailInput()
-const password = passwordInput()
-
-const { error } = await client.auth.signInWithPassword({
-email,
-password
-})
-
-status(error ? error.message : "Connecté.")
-}
-
-async function logout() {
-
-await client.auth.signOut()
-
-status("Déconnecté.")
-}
-
-function emailInput() {
-return document.getElementById("email").value
-}
-
-function passwordInput() {
-return document.getElementById("password").value
-}
-
-function status(msg) {
-document.getElementById("status").innerText = msg
-}
-
-</script>
-
+  <script src="js/auth.js"></script>
 </body>
 </html>

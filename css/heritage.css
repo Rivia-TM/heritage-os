@@ -1,0 +1,204 @@
+:root{
+  --bg:#2D4A5E;          /* Bleu signature */
+  --bg2:#243D4E;         /* plus sombre */
+  --text:#F2F1ED;        /* Ivoire signature */
+  --text2:rgba(242,241,237,.72);
+  --line:rgba(242,241,237,.22);
+  --line2:rgba(242,241,237,.32);
+  --focus:rgba(242,241,237,.75);
+}
+
+*{ box-sizing:border-box; }
+
+html,body{ height:100%; }
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  font-weight:300;
+  letter-spacing:0.01em;
+}
+
+.page{
+  min-height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:48px 20px;
+}
+
+.shell{
+  width:min(520px, 100%);
+  padding:0 10px;
+}
+
+/* Signature en haut, discrète, logique Apple (présence, pas démonstration) */
+.brand{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:26px;
+  opacity:.95;
+}
+
+.brand .wordmark{
+  font-size:12px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--text2);
+}
+
+/* Bloc central */
+.panel{
+  width:min(420px, 100%);
+  margin:0 auto;
+  text-align:center;
+}
+
+h1{
+  margin:0 0 10px 0;
+  font-size:44px;
+  line-height:1.05;
+  font-weight:400;
+  letter-spacing:-0.02em;
+}
+
+.sub{
+  margin:0 0 28px 0;
+  font-size:18px;
+  color:var(--text2);
+  font-weight:300;
+}
+
+/* Champs Apple-like: grand, simple, net */
+.fieldWrap{
+  margin:0 auto;
+  width:min(420px, 100%);
+}
+
+.field{
+  position:relative;
+  display:flex;
+  align-items:center;
+  border:1px solid var(--line);
+  border-radius:12px;
+  height:52px;
+  padding:0 10px 0 14px;
+  background:rgba(0,0,0,0.06);
+}
+
+.field:focus-within{
+  border-color:var(--focus);
+}
+
+.field input{
+  width:100%;
+  border:none;
+  outline:none;
+  background:transparent;
+  color:var(--text);
+  font-size:16px;
+  font-weight:300;
+}
+
+.field input::placeholder{
+  color:rgba(242,241,237,.55);
+}
+
+.arrowBtn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:34px;
+  height:34px;
+  border-radius:18px;
+  border:1px solid var(--line);
+  background:rgba(0,0,0,0.08);
+  color:var(--text);
+  cursor:pointer;
+}
+
+.arrowBtn:hover{
+  border-color:var(--line2);
+}
+
+.arrowBtn:active{
+  transform:translateY(1px);
+}
+
+/* Options sous champs */
+.optionsRow{
+  width:min(420px, 100%);
+  margin:14px auto 0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  text-align:left;
+}
+
+.remember{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  color:var(--text2);
+  font-size:14px;
+  user-select:none;
+}
+
+.remember input{
+  width:16px;
+  height:16px;
+  accent-color:rgba(242,241,237,.85);
+}
+
+.smallLink{
+  color:var(--text2);
+  font-size:14px;
+  text-decoration:none;
+}
+
+.smallLink:hover{
+  text-decoration:underline;
+  color:rgba(242,241,237,.9);
+}
+
+/* Ligne “créer un compte” */
+.createRow{
+  width:min(420px, 100%);
+  margin:18px auto 0 auto;
+  color:var(--text2);
+  font-size:14px;
+  text-align:center;
+}
+
+.createRow a{
+  color:rgba(242,241,237,.9);
+  text-decoration:none;
+}
+
+.createRow a:hover{
+  text-decoration:underline;
+}
+
+/* Status */
+.status{
+  width:min(420px, 100%);
+  margin:14px auto 0 auto;
+  font-size:13px;
+  color:var(--text2);
+  opacity:0;
+  transition:opacity .18s ease;
+  min-height:18px;
+}
+
+/* Steps */
+.hidden{ display:none; }
+
+/* Mobile */
+@media (max-width:520px){
+  h1{ font-size:36px; }
+  .sub{ font-size:16px; }
+}
