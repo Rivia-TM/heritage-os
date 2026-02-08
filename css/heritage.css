@@ -1,171 +1,136 @@
 :root{
   --blue:#2D4A5E;
   --ivory:#F2F1ED;
-  --muted:rgba(242,241,237,.65);
-  --stroke:rgba(242,241,237,.25);
+  --muted:rgba(242,241,237,.68);
+  --stroke:rgba(242,241,237,.26);
 }
 
-*{box-sizing:border-box}
-
-html,body{
-  height:100%;
-}
-
+/* CENTER CORE */
 body{
   margin:0;
+  height:100vh;
+
   background:var(--blue);
   color:var(--ivory);
-  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  font-weight:300;
+
+  font-family:Inter,system-ui;
 
   display:flex;
   align-items:center;
   justify-content:center;
 }
 
-/* MASTER CENTER BLOCK */
-.page{
-  width:100%;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-}
-
-/* MAIN LOGIN BLOCK */
+/* MASTER WIDTH */
 .wrap{
 
   width:100%;
-  max-width:420px;
+  max-width:460px;
 
   display:flex;
   flex-direction:column;
   align-items:center;
-
-  transform:translateY(-40px); /* move whole block slightly higher */
 }
 
 /* LOGO */
 .brand{
+
   position:absolute;
-  top:48px;
+  top:52px;
 }
 
 .logo{
-  height:34px;
-  opacity:.92;
+  height:36px;
 }
 
-/* TITLE */
+/* TITLE FIX */
 h1{
-  margin:0;
-  margin-bottom:28px;
 
-  font-size:28px;
-  font-weight:300;
-  letter-spacing:-0.02em;
-  line-height:1.25;
+  width:100%;
 
   text-align:center;
+
+  font-size:30px;
+  font-weight:300;
+
+  line-height:1.28;
+
+  margin-bottom:30px;
 }
 
-/* INPUT */
+/* INPUT FULL WIDTH */
 .field{
+
   width:100%;
-  position:relative;
 }
 
 .input{
-  width:100%;
-  height:48px;
 
-  border-radius:10px;
+  width:100%;
+  height:52px;
+
+  border-radius:11px;
   border:1px solid var(--stroke);
 
   background:transparent;
   color:var(--ivory);
 
-  padding-left:16px;
+  font-size:17px;
 
-  font-size:15px;
+  padding-left:18px;
 }
 
-.arrow{
-
-  position:absolute;
-  right:8px;
-  top:50%;
-
-  transform:translateY(-50%);
-
-  width:32px;
-  height:32px;
-
-  border-radius:50%;
-  border:1px solid var(--stroke);
-
-  background:none;
-  color:var(--ivory);
-}
-
-/* META CENTERED */
+/* CENTERED META BLOCK */
 .meta{
 
-  margin-top:28px;
+  width:100%;
+
+  margin-top:26px;
 
   display:flex;
   flex-direction:column;
   align-items:center;
-  justify-content:center;
+}
 
-  gap:10px;
+/* FORCE PERFECT CENTER */
+.remember{
+
+  width:100%;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  gap:8px;
+
+  font-size:15px;
+}
+
+/* PASSWORD LINK CENTER */
+.meta a{
+
+  margin-top:8px;
+
+  font-size:15px;
+
+  color:var(--muted);
 
   text-align:center;
 }
 
-/* REMEMBER CENTER FIX */
-.remember{
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  gap:8px;
-}
-
-.remember input{
-
-  width:14px;
-  height:14px;
-}
-
-/* LINKS */
-.meta a{
-
-  color:var(--muted);
-  text-decoration:none;
-}
-
-.meta a:hover{
-  text-decoration:underline;
-}
-
-/* BOTTOM CREATE ACCOUNT */
+/* CREATE ACCOUNT */
 .bottom{
 
   position:absolute;
-  bottom:56px;
+  bottom:60px;
 
+  width:100%;
   text-align:center;
 }
 
 .bottom a{
 
-  font-size:15px;
+  font-size:16px;
+  font-weight:400;
+
   color:var(--ivory);
-
-  text-decoration:none;
-}
-
-.bottom a:hover{
-  text-decoration:underline;
 }
