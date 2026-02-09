@@ -9,16 +9,13 @@
 
 <body>
   <!-- Background layer (image OR video). Controlled by js/app.js -->
-  <div class="bg" aria-hidden="true" style="position:fixed;inset:0;z-index:0;overflow:hidden;background:#000;">
-  <video id="bgVideoForce"
-         autoplay muted loop playsinline webkit-playsinline
-         controls
-         style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;">
-    <source src="./assets/bg.mp4" type="video/mp4">
-  </video>
-  <!-- overlay désactivé pour test -->
-</div>
+    <div class="bg" aria-hidden="true">
+    <img id="bgImage" class="bg-media hidden" alt="" />
+    <video id="bgVideo" class="bg-media hidden" autoplay muted loop playsinline webkit-playsinline preload="auto"></video>
+    <div class="bg-overlay"></div>
   </div>
+
+</div>
 
   <main class="page">
     <section class="auth" aria-label="Connexion Héritage OS">
@@ -83,13 +80,13 @@
 
 <body>
   <!-- Background layer (image OR video). Controlled by js/app.js -->
-  <div class="bg" aria-hidden="true">
+    <div class="bg" aria-hidden="true">
     <img id="bgImage" class="bg-media hidden" alt="" />
-    <video id="bgVideo" class="bg-media hidden" autoplay muted loop playsinline preload="auto">
-      <source src="assets/bg.mp4" type="video/mp4" />
-    </video>
+    <video id="bgVideo" class="bg-media hidden" autoplay muted loop playsinline webkit-playsinline preload="auto"></video>
     <div class="bg-overlay"></div>
   </div>
+
+</div>
 
   <main class="page">
     <section class="auth" aria-label="Connexion Héritage OS">

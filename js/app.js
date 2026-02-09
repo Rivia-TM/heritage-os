@@ -170,3 +170,40 @@
 })();
 /* END:BGVIDEO_IOS_SAFE */
 
+
+/* === BG VIDEO HARDENING (iOS/Safari) === */
+(function () {
+  function hardenVideo(v, fallbackSrc) {
+    if (!v) return;
+    try {
+      v.controls = false;
+      v.removeAttribute("controls");
+      v.setAttribute("controlslist", "nodownload noplaybackrate noremoteplayback");
+      v.disablePictureInPicture = true;
+      v.playsInline = true;
+      v.setAttribute("playsinline", "");
+      v.setAttribute("webkit-playsinline", "");
+      v.muted = true;
+      v.setAttribute("muted", "");
+      v.setAttribute("preload", "auto");
+      if (!v.getAttribute("src") && !v.querySelector("source") && fallbackSrc) {
+        v.src = fallbackSrc;
+      }
+      const tryPlay = () => {
+        try {
+          const p = v.play();
+          if (p && p.catch) p.catch(() => {});
+        } catch (e) {}
+      };
+      v.addEventListener("loadedmetadata", tryPlay, { once: true });
+      v.addEventListener("canplay", tryPlay);
+      tryPlay();
+    } catch (e) {}
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    hardenVideo(document.getElementById("bgVideo"), "assets/bg.mp4");
+    hardenVideo(document.getElementById("brandVideo"), null);
+  });
+})();
+
