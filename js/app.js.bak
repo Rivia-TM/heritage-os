@@ -113,7 +113,7 @@
   }
 
   // Events
-  els.arrowEmail.addEventListener("click", onContinueFromEmail);
+ arrowEmail.addEventListener("click", onContinueFromEmail);
   els.arrowPassword.addEventListener("click", onLogin);
 
   els.email.addEventListener("keydown", (e) => {
@@ -137,36 +137,52 @@
   applyMedia();
   goStep(1);
 })();
+/* BEGIN:BG-VIDEO-ULTRA */
+(function () {
+  const VIDEO_SRC = "assets/bg.mp4";
 
+  function forcePlay(video) {
+    if (!video) return;
 
-/* BEGIN:BGVIDEO_IOS_SAFE */
-(function bgVideoIOSSafe(){
-  const v = document.getElementById("bgVideo");
-  if (!v) return;
+    if (!video.getAttribute("src")) video.setAttribute("src", VIDEO_SRC);
+    video.classList.remove("hidden");
 
-  // s'assurer qu'une source existe
-  const hasSource = v.querySelector("source") && v.querySelector("source").getAttribute("src");
-  if (!hasSource) {
-    const src = document.createElement("source");
-    src.src = "assets/bg.mp4";
-    src.type = "video/mp4";
-    v.appendChild(src);
+    video.muted = true;
+    video.loop = true;
+    video.playsInline = true;
+    video.setAttribute("muted", "");
+    video.setAttribute("playsinline", "");
+    video.setAttribute("autoplay", "");
+    video.preload = "auto";
+
+    const p = video.play();
+    if (p && typeof p.catch === "function") p.catch(() => {});
   }
 
-  // Forcer attributs iOS
-  v.muted = true;
-  v.playsInline = true;
-  v.setAttribute("playsinline", "");
-  v.setAttribute("muted", "");
-  v.setAttribute("autoplay", "");
-  v.loop = true;
+  function boot() {
+    const bgVideo = document.getElementById("bgVideo");
+    if (!bgVideo) {
+      console.warn("[bgVideo] introuvable dans le DOM");
+      return;
+    }
 
-  const tryPlay = () => v.play().catch(()=>{});
-  // iOS bloque souvent tant qu'il n'y a pas d'interaction utilisateur
-  document.addEventListener("touchstart", tryPlay, {passive:true});
-  document.addEventListener("click", tryPlay);
-  // tente quand même
-  tryPlay();
+    bgVideo.setAttribute("src", VIDEO_SRC);
+    forcePlay(bgVideo);
+
+    const retry = () => forcePlay(bgVideo);
+    ["click","touchstart","pointerdown","keydown"].forEach(evt =>
+      window.addEventListener(evt, retry, { once: true, passive: true })
+    );
+
+    bgVideo.addEventListener("error", () => {
+      console.warn("[bgVideo] erreur chargement. Vérifie:", VIDEO_SRC);
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
 })();
-/* END:BGVIDEO_IOS_SAFE */
-
+/* END:BG-VIDEO-ULTRA */

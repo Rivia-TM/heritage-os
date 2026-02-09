@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>VIDEO TEST</title>
+  <style>
+    html,body{margin:0;height:100%;background:#000}
+    video{width:100%;height:100%;object-fit:cover}
+  </style>
+</head>
+<body>
+  <video id="v" controls playsinline preload="auto">
+    <source src="assets/bg.mp4" type="video/mp4">
+  </video>
+  <script>
+    // tente autoplay (souvent bloqué iOS), mais au moins "Play" doit marcher via controls
+    const v=document.getElementById('v');
+    v.muted=true; // pour maximiser chances autoplay iOS
+    v.play().catch(()=>{});
+  </script>
+</body>
+</html>

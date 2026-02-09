@@ -113,7 +113,7 @@
   }
 
   // Events
-  els.arrowEmail.addEventListener("click", onContinueFromEmail);
+ arrowEmail.addEventListener("click", onContinueFromEmail);
   els.arrowPassword.addEventListener("click", onLogin);
 
   els.email.addEventListener("keydown", (e) => {
@@ -137,36 +137,3 @@
   applyMedia();
   goStep(1);
 })();
-
-
-/* BEGIN:BGVIDEO_IOS_SAFE */
-(function bgVideoIOSSafe(){
-  const v = document.getElementById("bgVideo");
-  if (!v) return;
-
-  // s'assurer qu'une source existe
-  const hasSource = v.querySelector("source") && v.querySelector("source").getAttribute("src");
-  if (!hasSource) {
-    const src = document.createElement("source");
-    src.src = "assets/bg.mp4";
-    src.type = "video/mp4";
-    v.appendChild(src);
-  }
-
-  // Forcer attributs iOS
-  v.muted = true;
-  v.playsInline = true;
-  v.setAttribute("playsinline", "");
-  v.setAttribute("muted", "");
-  v.setAttribute("autoplay", "");
-  v.loop = true;
-
-  const tryPlay = () => v.play().catch(()=>{});
-  // iOS bloque souvent tant qu'il n'y a pas d'interaction utilisateur
-  document.addEventListener("touchstart", tryPlay, {passive:true});
-  document.addEventListener("click", tryPlay);
-  // tente quand même
-  tryPlay();
-})();
-/* END:BGVIDEO_IOS_SAFE */
-
