@@ -251,3 +251,51 @@ function forcePlayInline(videoEl) {
 
 
 document.addEventListener('DOMContentLoaded', ()=>{ const bgVideo=document.getElementById('bgVideo'); forcePlayInline(bgVideo); });
+
+// === BG VIDEO HARDENING (autoplay iOS + no-controls) ===
+document.addEventListener("DOMContentLoaded", () => {
+  const v = document.getElementById("bgVideo");
+  if (!v) return;
+
+  // force attributes
+  v.muted = true;
+  v.loop = true;
+  v.autoplay = true;
+  v.playsInline = true;
+  v.setAttribute("muted", "");
+  v.setAttribute("playsinline", "");
+  v.setAttribute("webkit-playsinline", "");
+  v.setAttribute("preload", "auto");
+  v.removeAttribute("controls");
+
+  // ensure not hidden by classes
+  v.classList.remove("hidden");
+  v.classList.add("bg-media");
+
+  // ensure a source exists
+  const hasSource = v.querySelector("source");
+  if (!hasSource) {
+    const src = document.createElement("source");
+    src.src = "/assets/bg.mp4";
+    src.type = "video/mp4";
+    v.appendChild(src);
+  } else {
+    if (!hasSource.getAttribute("src")) hasSource.setAttribute("src", "/assets/bg.mp4");
+  }
+
+  // try play (iOS will allow only if muted + inline)
+  const tryPlay = () => {
+    const r = v.play();
+    if (r && typeof r.catch === "function") r.catch(() => {});
+  };
+  tryPlay();
+
+  // If iOS blocks on first load, retry after first user interaction
+  const once = () => {
+    tryPlay();
+    window.removeEventListener("touchstart", once, true);
+    window.removeEventListener("click", once, true);
+  };
+  window.addEventListener("touchstart", once, true);
+  window.addEventListener("click", once, true);
+});
