@@ -1,3 +1,44 @@
+
+/* HOS_BG_AUTOPLAY_HARDEN (iOS Safari) */
+function forcePlayInline(videoEl) {
+  if (!videoEl) return;
+
+  // Hardening iOS
+  videoEl.muted = true;
+  videoEl.defaultMuted = true;
+  videoEl.playsInline = true;
+  videoEl.setAttribute("playsinline", "");
+  videoEl.setAttribute("webkit-playsinline", "");
+  videoEl.autoplay = true;
+  videoEl.loop = true;
+  videoEl.controls = false;
+  videoEl.setAttribute("controls", "false");
+  videoEl.setAttribute("disablePictureInPicture", "");
+  videoEl.setAttribute("preload", "auto");
+
+  const tryPlay = () => {
+    try { videoEl.load(); } catch(e) {}
+    const p = videoEl.play();
+    if (p && typeof p.catch === "function") {
+      p.catch(() => {
+        // iOS a bloqué: on démarre au premier geste utilisateur
+        const once = () => {
+          videoEl.play().catch(()=>{});
+          window.removeEventListener("touchstart", once, { passive: true });
+          window.removeEventListener("click", once);
+        };
+        window.addEventListener("touchstart", once, { passive: true, once: true });
+        window.addEventListener("click", once, { once: true });
+      });
+    }
+  };
+
+  // 1) tentative immédiate
+  tryPlay();
+  // 2) seconde tentative courte (certains iOS aiment bien…)
+  setTimeout(tryPlay, 250);
+}
+
 // HERITAGE OS - Apple-like login flow (step 1 email, step 2 password)
 // UI fixed (minimal). Background + logo switchable (image OR video) from config below.
 
@@ -7,7 +48,7 @@
   // ---- CONFIG (change only these paths when you want) ----
   // Put your files in /assets then set paths here.
   // Example:
-  // background: { type:"video", src:"assets/bg.mp4" }
+  // background: { type:"video", src:"assets/bg_silent.mp4" }
   // brand:      { type:"image", src:"assets/heritage-logo.png" }
   const MEDIA = {
     background: { type: "none",  src: "" }, // "none" | "image" | "video"
@@ -148,7 +189,7 @@
   const hasSource = v.querySelector("source") && v.querySelector("source").getAttribute("src");
   if (!hasSource) {
     const src = document.createElement("source");
-    src.src = "assets/bg.mp4";
+    src.src = "assets/bg_silent.mp4";
     src.type = "video/mp4";
     v.appendChild(src);
   }
@@ -202,8 +243,11 @@
   }
 
   document.addEventListener("DOMContentLoaded", function () {
-    hardenVideo(document.getElementById("bgVideo"), "assets/bg.mp4");
+    hardenVideo(document.getElementById("bgVideo"), "assets/bg_silent.mp4");
     hardenVideo(document.getElementById("brandVideo"), null);
   });
 })();
 
+
+
+document.addEventListener('DOMContentLoaded', ()=>{ const bgVideo=document.getElementById('bgVideo'); forcePlayInline(bgVideo); });
