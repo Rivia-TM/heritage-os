@@ -299,3 +299,46 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("touchstart", once, true);
   window.addEventListener("click", once, true);
 });
+
+// === BG VIDEO IOS RENDER FIX ===
+document.addEventListener("DOMContentLoaded", () => {
+  const v = document.getElementById("bgVideo");
+  if (!v) return;
+
+  // hard attributes
+  v.muted = true;
+  v.loop = true;
+  v.autoplay = true;
+  v.playsInline = true;
+  v.setAttribute("muted", "");
+  v.setAttribute("playsinline", "");
+  v.setAttribute("webkit-playsinline", "");
+  v.setAttribute("preload", "auto");
+  v.removeAttribute("controls");
+
+  // iOS: force paint of first frame
+  const forceFrame = () => {
+    try {
+      if (v.readyState >= 1) {
+        v.currentTime = 0.01;
+      }
+    } catch (e) {}
+  };
+  v.addEventListener("loadedmetadata", forceFrame, { once: true });
+  v.addEventListener("canplay", forceFrame, { once: true });
+
+  const tryPlay = () => {
+    const r = v.play();
+    if (r && r.catch) r.catch(() => {});
+  };
+  tryPlay();
+
+  // fallback: first user interaction
+  const once = () => {
+    tryPlay();
+    window.removeEventListener("touchstart", once, true);
+    window.removeEventListener("click", once, true);
+  };
+  window.addEventListener("touchstart", once, true);
+  window.addEventListener("click", once, true);
+});
