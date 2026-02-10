@@ -4,48 +4,39 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Héritage OS</title>
-
 <link rel="stylesheet" href="css/style.css">
-
 </head>
 
 <body>
-<div id="login-root">
-<main id="login-main">
-<div class="login-page">
 
-<div class="login-container">
+<main class="page">
 
-  <div class="login-header">
-    <img src="assets/logo.png" alt="Héritage OS" class="login-logo">
-  </div>
+<img src="assets/logo.png" class="logo" alt="Héritage">
 
-  <div class="login-title">
-    Connectez-vous<br>pour accéder à votre espace.
-  </div>
+<h1 class="title">
+Connectez-vous<br>
+pour accéder à votre espace.
+</h1>
 
-  <input 
-    type="email" 
-    placeholder="Adresse e-mail"
-    class="login-input"
-  >
-
+<div class="input-wrap">
+<input type="email" placeholder="Adresse e-mail">
+<button class="arrow">→</button>
 </div>
-
-
-
-
-
-</div>
-
-
-<footer id="login-footer" class="login-footer">
-  <label class="remember"><input type="checkbox"> <span>Se souvenir de moi</span></label>
-  <a class="footer-link" href="#" data-action="signup">Créer un compte Héritage OS</a>
-  <a class="footer-link" href="#" data-action="forgot">Mot de passe oublié ?</a>
-</footer>
 
 </main>
-</div>
+
+<footer class="footer">
+
+<label class="remember">
+<input type="checkbox">
+<span>Se souvenir de moi</span>
+</label>
+
+<a href="#" class="link">Créer un compte Héritage OS</a>
+
+<a href="#" class="link">Mot de passe oublié ?</a>
+
+</footer>
+
 </body>
 </html>
