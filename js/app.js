@@ -1,428 +1,118 @@
+const SUPABASE_URL = "REPLACE_ME_SUPABASE_URL";
+const SUPABASE_ANON_KEY = "REPLACE_ME_SUPABASE_ANON_KEY";
 
-/* HOS_BG_AUTOPLAY_HARDEN (iOS Safari) */
-function forcePlayInline(videoEl) {
-  if (!videoEl) return;
+const $ = (id) => document.getElementById(id);
 
-  // Hardening iOS
-  videoEl.muted = true;
-  videoEl.defaultMuted = true;
-  videoEl.playsInline = true;
-  videoEl.setAttribute("playsinline", "");
-  videoEl.setAttribute("webkit-playsinline", "");
-  videoEl.autoplay = true;
-  videoEl.loop = true;
-  videoEl.controls = false;
-  videoEl.setAttribute("controls", "false");
-  videoEl.setAttribute("disablePictureInPicture", "");
-  videoEl.setAttribute("preload", "auto");
-
-  const tryPlay = () => {
-    try { videoEl.load(); } catch(e) {}
-    const p = videoEl.play();
-    if (p && typeof p.catch === "function") {
-      p.catch(() => {
-        // iOS a bloqué: on démarre au premier geste utilisateur
-        const once = () => {
-          videoEl.play().catch(()=>{});
-          window.removeEventListener("touchstart", once, { passive: true });
-          window.removeEventListener("click", once);
-        };
-        window.addEventListener("touchstart", once, { passive: true, once: true });
-        window.addEventListener("click", once, { once: true });
-      });
-    }
-  };
-
-  // 1) tentative immédiate
-  tryPlay();
-  // 2) seconde tentative courte (certains iOS aiment bien…)
-  setTimeout(tryPlay, 250);
+function show(id){
+  ["view-login","view-signup","view-reset","view-private"].forEach(v => $(v).style.display = (v===id ? "block" : "none"));
 }
 
-// HERITAGE OS - Apple-like login flow (step 1 email, step 2 password)
-// UI fixed (minimal). Background + logo switchable (image OR video) from config below.
+function setMsg(el, text){
+  el.textContent = text || "";
+  el.style.color = text?.toLowerCase().includes("ok") ? "rgba(200,255,220,0.85)" : "rgba(255,220,220,0.85)";
+}
 
-(function () {
-  const $ = (sel) => document.querySelector(sel);
+function route(){
+  const h = (location.hash || "#login").replace("#","");
+  if(h === "signup") show("view-signup");
+  else if(h === "reset") show("view-reset");
+  else show("view-login");
+}
 
-  // ---- CONFIG (change only these paths when you want) ----
-  // Put your files in /assets then set paths here.
-  // Example:
-  // background: { type:"video", src:"assets/bg_silent.mp4" }
-  // brand:      { type:"image", src:"assets/heritage-logo.png" }
-  const MEDIA = {
-    background: { type: "none",  src: "" }, // "none" | "image" | "video"
-    brand:      { type: "none",  src: "" }, // "none" | "image" | "video"
-  };
-  // -------------------------------------------------------
+function storageMode(){
+  return $("remember")?.checked ? window.localStorage : window.sessionStorage;
+}
 
-  const state = { step: 1 };
-
-  const els = {
-    email: $("#email"),
-    password: $("#password"),
-    remember: $("#remember"),
-    title: $("#title"),
-
-    stepEmail: $("#stepEmail"),
-    stepPassword: $("#stepPassword"),
-
-    arrowEmail: $("#arrowEmail"),
-    arrowPassword: $("#arrowPassword"),
-
-    forgot: $("#forgot"),
-    create: $("#createAccount"),
-    status: $("#status"),
-
-    bgImage: $("#bgImage"),
-    bgVideo: $("#bgVideo"),
-    brandImage: $("#brandImage"),
-    brandVideo: $("#brandVideo"),
-  };
-
-  function setStatus(msg, isError = false) {
-    els.status.textContent = msg || "";
-    els.status.style.opacity = msg ? "1" : "0";
-    els.status.style.color = isError ? "rgba(255,210,210,.9)" : "rgba(242,241,237,.72)";
-  }
-
-  function normalizeEmail(v) { return (v || "").trim(); }
-  function validateEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
-
-  function goStep(step) {
-    state.step = step;
-
-    if (step === 1) {
-      els.stepEmail.classList.remove("hidden");
-      els.stepPassword.classList.add("hidden");
-      setStatus("");
-      setTimeout(() => els.email && els.email.focus(), 0);
-      return;
+function makeClient(){
+  return supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: {
+      persistSession: true,
+      storage: storageMode(),
+      autoRefreshToken: true,
+      detectSessionInUrl: true
     }
-
-    els.stepEmail.classList.add("hidden");
-    els.stepPassword.classList.remove("hidden");
-    setStatus("");
-    setTimeout(() => els.password && els.password.focus(), 0);
-  }
-
-  function applyMedia() {
-    // Background
-    els.bgImage.classList.add("hidden");
-    els.bgVideo.classList.add("hidden");
-    if (MEDIA.background.type === "image" && MEDIA.background.src) {
-      els.bgImage.src = MEDIA.background.src;
-      els.bgImage.classList.remove("hidden");
-    }
-    if (MEDIA.background.type === "video" && MEDIA.background.src) {
-      els.bgVideo.src = MEDIA.background.src;
-      els.bgVideo.classList.remove("hidden");
-    }
-
-    // Brand
-    els.brandImage.classList.add("hidden");
-    els.brandVideo.classList.add("hidden");
-    if (MEDIA.brand.type === "image" && MEDIA.brand.src) {
-      els.brandImage.src = MEDIA.brand.src;
-      els.brandImage.classList.remove("hidden");
-    }
-    if (MEDIA.brand.type === "video" && MEDIA.brand.src) {
-      els.brandVideo.src = MEDIA.brand.src;
-      els.brandVideo.classList.remove("hidden");
-    }
-  }
-
-  function onContinueFromEmail() {
-    const email = normalizeEmail(els.email.value);
-    if (!validateEmail(email)) {
-      setStatus("Adresse e-mail invalide.", true);
-      return;
-    }
-    goStep(2);
-  }
-
-  function onLogin() {
-    const email = normalizeEmail(els.email.value);
-    const pwd = (els.password.value || "").trim();
-
-    if (!validateEmail(email)) { setStatus("Adresse e-mail invalide.", true); goStep(1); return; }
-    if (pwd.length < 6) { setStatus("Mot de passe trop court.", true); return; }
-
-    // Placeholder: plug Supabase here later.
-    setStatus("Connexion…");
-    setTimeout(() => setStatus("Connecté (UI test)."), 500);
-  }
-
-  // Events
-  els.arrowEmail.addEventListener("click", onContinueFromEmail);
-  els.arrowPassword.addEventListener("click", onLogin);
-
-  els.email.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") onContinueFromEmail();
   });
-  els.password.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") onLogin();
+}
+
+let sb;
+
+async function refreshUI(){
+  const { data } = await sb.auth.getSession();
+  const session = data?.session;
+
+  if(session?.user){
+    show("view-private");
+    $("who").textContent = `Utilisateur: ${session.user.email || "(sans email)"}`;
+    return;
+  }
+  route();
+}
+
+async function main(){
+  if(SUPABASE_URL.includes("REPLACE_ME") || SUPABASE_ANON_KEY.includes("REPLACE_ME")){
+    setMsg($("msg"), "⚠️ Configure SUPABASE_URL et SUPABASE_ANON_KEY dans js/app.js");
+    route();
+    return;
+  }
+
+  sb = makeClient();
+  window.addEventListener("hashchange", route);
+
+  $("btn-magic").addEventListener("click", async () => {
+    const email = $("login-email").value.trim();
+    if(!email) return setMsg($("msg"), "Entre un email.");
+    setMsg($("msg"), "Envoi du lien magique…");
+    const { error } = await sb.auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo: window.location.origin }
+    });
+    if(error) return setMsg($("msg"), `Erreur: ${error.message}`);
+    setMsg($("msg"), "OK: vérifie ta boîte mail (lien de connexion).");
   });
 
-  els.forgot.addEventListener("click", (e) => {
-    e.preventDefault();
-    setStatus("Mot de passe oublié: à brancher.", false);
+  $("btn-login").addEventListener("click", async () => {
+    const email = $("login-email").value.trim();
+    const password = $("login-pass").value;
+    if(!email || !password) return setMsg($("msg"), "Email + mot de passe requis.");
+    setMsg($("msg"), "Connexion…");
+    const { error } = await sb.auth.signInWithPassword({ email, password });
+    if(error) return setMsg($("msg"), `Erreur: ${error.message}`);
+    setMsg($("msg"), "OK");
+    await refreshUI();
   });
 
-  els.create.addEventListener("click", (e) => {
-    e.preventDefault();
-    setStatus("Créer un compte: à brancher.", false);
+  $("btn-signup").addEventListener("click", async () => {
+    const email = $("su-email").value.trim();
+    const password = $("su-pass").value;
+    if(!email || !password) return setMsg($("msg2"), "Email + mot de passe requis.");
+    setMsg($("msg2"), "Création…");
+    const { error } = await sb.auth.signUp({ email, password });
+    if(error) return setMsg($("msg2"), `Erreur: ${error.message}`);
+    setMsg($("msg2"), "OK: compte créé (si email confirmation activé, vérifie ta boîte).");
   });
 
-  // Init
-  applyMedia();
-  goStep(1);
-})();
-
-
-/* BEGIN:BGVIDEO_IOS_SAFE */
-(function bgVideoIOSSafe(){
-  const v = document.getElementById("bgVideo");
-  if (!v) return;
-
-  // s'assurer qu'une source existe
-  const hasSource = v.querySelector("source") && v.querySelector("source").getAttribute("src");
-  if (!hasSource) {
-    const src = document.createElement("source");
-    src.src = "assets/bg_silent.mp4";
-    src.type = "video/mp4";
-    v.appendChild(src);
-  }
-
-  // Forcer attributs iOS
-  v.muted = true;
-  v.playsInline = true;
-  v.setAttribute("playsinline", "");
-  v.setAttribute("muted", "");
-  v.setAttribute("autoplay", "");
-  v.loop = true;
-
-  const tryPlay = () => v.play().catch(()=>{});
-  // iOS bloque souvent tant qu'il n'y a pas d'interaction utilisateur
-  document.addEventListener("touchstart", tryPlay, {passive:true});
-  document.addEventListener("click", tryPlay);
-  // tente quand même
-  tryPlay();
-})();
-/* END:BGVIDEO_IOS_SAFE */
-
-
-/* === BG VIDEO HARDENING (iOS/Safari) === */
-(function () {
-  function hardenVideo(v, fallbackSrc) {
-    if (!v) return;
-    try {
-      v.controls = false;
-      v.removeAttribute("controls");
-      v.setAttribute("controlslist", "nodownload noplaybackrate noremoteplayback");
-      v.disablePictureInPicture = true;
-      v.playsInline = true;
-      v.setAttribute("playsinline", "");
-      v.setAttribute("webkit-playsinline", "");
-      v.muted = true;
-      v.setAttribute("muted", "");
-      v.setAttribute("preload", "auto");
-      if (!v.getAttribute("src") && !v.querySelector("source") && fallbackSrc) {
-        v.src = fallbackSrc;
-      }
-      const tryPlay = () => {
-        try {
-          const p = v.play();
-          if (p && p.catch) p.catch(() => {});
-        } catch (e) {}
-      };
-      v.addEventListener("loadedmetadata", tryPlay, { once: true });
-      v.addEventListener("canplay", tryPlay);
-      tryPlay();
-    } catch (e) {}
-  }
-
-  document.addEventListener("DOMContentLoaded", function () {
-    hardenVideo(document.getElementById("bgVideo"), "assets/bg_silent.mp4");
-    hardenVideo(document.getElementById("brandVideo"), null);
+  $("btn-reset").addEventListener("click", async () => {
+    const email = $("rp-email").value.trim();
+    if(!email) return setMsg($("msg3"), "Entre un email.");
+    setMsg($("msg3"), "Envoi…");
+    const { error } = await sb.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin
+    });
+    if(error) return setMsg($("msg3"), `Erreur: ${error.message}`);
+    setMsg($("msg3"), "OK: email envoyé.");
   });
-})();
 
+  $("btn-logout").addEventListener("click", async () => {
+    await sb.auth.signOut();
+    location.hash = "#login";
+    await refreshUI();
+  });
 
+  sb.auth.onAuthStateChange(async () => {
+    await refreshUI();
+  });
 
-document.addEventListener('DOMContentLoaded', ()=>{ const bgVideo=document.getElementById('bgVideo'); forcePlayInline(bgVideo); });
+  await refreshUI();
+}
 
-// === BG VIDEO HARDENING (autoplay iOS + no-controls) ===
-document.addEventListener("DOMContentLoaded", () => {
-  const v = document.getElementById("bgVideo");
-  if (!v) return;
-
-  // force attributes
-  v.muted = true;
-  v.loop = true;
-  v.autoplay = true;
-  v.playsInline = true;
-  v.setAttribute("muted", "");
-  v.setAttribute("playsinline", "");
-  v.setAttribute("webkit-playsinline", "");
-  v.setAttribute("preload", "auto");
-  v.removeAttribute("controls");
-
-  // ensure not hidden by classes
-  v.classList.remove("hidden");
-  v.classList.add("bg-media");
-
-  // ensure a source exists
-  const hasSource = v.querySelector("source");
-  if (!hasSource) {
-    const src = document.createElement("source");
-    src.src = "/assets/bg.mp4";
-    src.type = "video/mp4";
-    v.appendChild(src);
-  } else {
-    if (!hasSource.getAttribute("src")) hasSource.setAttribute("src", "/assets/bg.mp4");
-  }
-
-  // try play (iOS will allow only if muted + inline)
-  const tryPlay = () => {
-    const r = v.play();
-    if (r && typeof r.catch === "function") r.catch(() => {});
-  };
-  tryPlay();
-
-  // If iOS blocks on first load, retry after first user interaction
-  const once = () => {
-    tryPlay();
-    window.removeEventListener("touchstart", once, true);
-    window.removeEventListener("click", once, true);
-  };
-  window.addEventListener("touchstart", once, true);
-  window.addEventListener("click", once, true);
-});
-
-// === BG VIDEO IOS RENDER FIX ===
-document.addEventListener("DOMContentLoaded", () => {
-  const v = document.getElementById("bgVideo");
-  if (!v) return;
-
-  // hard attributes
-  v.muted = true;
-  v.loop = true;
-  v.autoplay = true;
-  v.playsInline = true;
-  v.setAttribute("muted", "");
-  v.setAttribute("playsinline", "");
-  v.setAttribute("webkit-playsinline", "");
-  v.setAttribute("preload", "auto");
-  v.removeAttribute("controls");
-
-  // iOS: force paint of first frame
-  const forceFrame = () => {
-    try {
-      if (v.readyState >= 1) {
-        v.currentTime = 0.01;
-      }
-    } catch (e) {}
-  };
-  v.addEventListener("loadedmetadata", forceFrame, { once: true });
-  v.addEventListener("canplay", forceFrame, { once: true });
-
-  const tryPlay = () => {
-    const r = v.play();
-    if (r && r.catch) r.catch(() => {});
-  };
-  tryPlay();
-
-  // fallback: first user interaction
-  const once = () => {
-    tryPlay();
-    window.removeEventListener("touchstart", once, true);
-    window.removeEventListener("click", once, true);
-  };
-  window.addEventListener("touchstart", once, true);
-  window.addEventListener("click", once, true);
-});
-
-// === iOS autoplay hardening for background video ===
-(function () {
-  const v = document.getElementById('bgVideo');
-  if (!v) return;
-
-  // Force attributes/properties (iOS is picky)
-  v.muted = true;
-  v.autoplay = true;
-  v.loop = true;
-  v.playsInline = true;
-  v.setAttribute('muted', '');
-  v.setAttribute('playsinline', '');
-  v.removeAttribute('controls');
-
-  const tryPlay = () => {
-    const p = v.play();
-    if (p && typeof p.catch === 'function') p.catch(() => {});
-  };
-
-  // Try immediately
-  if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    tryPlay();
-  } else {
-    document.addEventListener('DOMContentLoaded', tryPlay, { once: true });
-  }
-
-  // Then on first user gesture (Safari requirement)
-  const kick = () => { tryPlay(); cleanup(); };
-  const cleanup = () => {
-    window.removeEventListener('touchstart', kick, true);
-    window.removeEventListener('click', kick, true);
-  };
-  window.addEventListener('touchstart', kick, true);
-  window.addEventListener('click', kick, true);
-})();
-
-
-// === BG VIDEO: iOS autoplay hardening + retry on first user gesture ===
-(function () {
-  function setupBgVideo() {
-    const v = document.querySelector('video.bg-media');
-    if (!v) return;
-
-    // Force attributes for iOS/Safari
-    v.muted = true;
-    v.loop = true;
-    v.autoplay = true;
-    v.playsInline = true;
-    v.setAttribute('muted', '');
-    v.setAttribute('playsinline', '');
-    v.setAttribute('webkit-playsinline', '');
-    v.removeAttribute('controls');
-
-    const tryPlay = () => {
-      try {
-        const p = v.play();
-        if (p && typeof p.catch === 'function') p.catch(() => {});
-      } catch (e) {}
-    };
-
-    // Try immediately
-    tryPlay();
-
-    // Retry on first real gesture (iOS policy)
-    const once = () => {
-      tryPlay();
-      window.removeEventListener('touchstart', once, { passive: true });
-      window.removeEventListener('pointerdown', once, { passive: true });
-      window.removeEventListener('click', once, true);
-    };
-
-    window.addEventListener('touchstart', once, { passive: true, once: true });
-    window.addEventListener('pointerdown', once, { passive: true, once: true });
-    window.addEventListener('click', once, { capture: true, once: true });
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', setupBgVideo);
-  } else {
-    setupBgVideo();
-  }
-})();
-
+main();

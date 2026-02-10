@@ -177,26 +177,83 @@ body{
 .footer-link:hover{ text-decoration: underline; }
 #forgot{ justify-self: end; }
 
-/* BEGIN:BG-VIDEO-ULTRA */
-.bg{
+/* BEGIN:BGVIDEO_SAFE */
+.bg {
   position: fixed;
   inset: 0;
-  z-index: -2;
+  z-index: 0;
   overflow: hidden;
 }
-.bg-media{
+.bg-media {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 1;
+  display: block;
 }
-.bg-overlay{
+.bg-overlay {
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: rgba(0,0,0,0.25);
+  background: rgba(0,0,0,.20);
 }
-.hidden{ display:none !important; }
-/* END:BG-VIDEO-ULTRA */
+/* IMPORTANT: ton contenu doit être au-dessus du BG */
+main.page, .page, section.auth {
+  position: relative;
+  z-index: 2;
+}
+/* END:BGVIDEO_SAFE */
+/* === FORCE VIDEO BACKGROUND FIX === */
+
+.bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.bg-media {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.bg-overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.35);
+}
+
+video.bg-media::-webkit-media-controls {
+  display: none !important;
+}
+
+video.bg-media {
+  outline: none;
+}
+
+/* === BG VIDEO: anti-controls + fullcover === */
+.bg { position: fixed; inset: 0; z-index: -1; overflow: hidden; }
+.bg-media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+.bg-overlay { position: absolute; inset: 0; background: rgba(0,0,0,.35); pointer-events: none; }
+
+/* Safari/iOS: tente de masquer les contrôles s'ils apparaissent */
+video.bg-media::-webkit-media-controls,
+video.bg-media::-webkit-media-controls-panel,
+video.bg-media::-webkit-media-controls-play-button,
+video.bg-media::-webkit-media-controls-start-playback-button {
+  display: none !important;
+  -webkit-appearance: none !important;
+}

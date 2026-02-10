@@ -1,3 +1,44 @@
+
+/* HOS_BG_AUTOPLAY_HARDEN (iOS Safari) */
+function forcePlayInline(videoEl) {
+  if (!videoEl) return;
+
+  // Hardening iOS
+  videoEl.muted = true;
+  videoEl.defaultMuted = true;
+  videoEl.playsInline = true;
+  videoEl.setAttribute("playsinline", "");
+  videoEl.setAttribute("webkit-playsinline", "");
+  videoEl.autoplay = true;
+  videoEl.loop = true;
+  videoEl.controls = false;
+  videoEl.setAttribute("controls", "false");
+  videoEl.setAttribute("disablePictureInPicture", "");
+  videoEl.setAttribute("preload", "auto");
+
+  const tryPlay = () => {
+    try { videoEl.load(); } catch(e) {}
+    const p = videoEl.play();
+    if (p && typeof p.catch === "function") {
+      p.catch(() => {
+        // iOS a bloqué: on démarre au premier geste utilisateur
+        const once = () => {
+          videoEl.play().catch(()=>{});
+          window.removeEventListener("touchstart", once, { passive: true });
+          window.removeEventListener("click", once);
+        };
+        window.addEventListener("touchstart", once, { passive: true, once: true });
+        window.addEventListener("click", once, { once: true });
+      });
+    }
+  };
+
+  // 1) tentative immédiate
+  tryPlay();
+  // 2) seconde tentative courte (certains iOS aiment bien…)
+  setTimeout(tryPlay, 250);
+}
+
 // HERITAGE OS - Apple-like login flow (step 1 email, step 2 password)
 // UI fixed (minimal). Background + logo switchable (image OR video) from config below.
 
@@ -7,7 +48,7 @@
   // ---- CONFIG (change only these paths when you want) ----
   // Put your files in /assets then set paths here.
   // Example:
-  // background: { type:"video", src:"assets/bg.mp4" }
+  // background: { type:"video", src:"assets/bg_silent.mp4" }
   // brand:      { type:"image", src:"assets/heritage-logo.png" }
   const MEDIA = {
     background: { type: "none",  src: "" }, // "none" | "image" | "video"
@@ -113,7 +154,7 @@
   }
 
   // Events
- arrowEmail.addEventListener("click", onContinueFromEmail);
+  els.arrowEmail.addEventListener("click", onContinueFromEmail);
   els.arrowPassword.addEventListener("click", onLogin);
 
   els.email.addEventListener("keydown", (e) => {
@@ -137,52 +178,203 @@
   applyMedia();
   goStep(1);
 })();
-/* BEGIN:BG-VIDEO-ULTRA */
-(function () {
-  const VIDEO_SRC = "assets/bg.mp4";
 
-  function forcePlay(video) {
-    if (!video) return;
 
-    if (!video.getAttribute("src")) video.setAttribute("src", VIDEO_SRC);
-    video.classList.remove("hidden");
+/* BEGIN:BGVIDEO_IOS_SAFE */
+(function bgVideoIOSSafe(){
+  const v = document.getElementById("bgVideo");
+  if (!v) return;
 
-    video.muted = true;
-    video.loop = true;
-    video.playsInline = true;
-    video.setAttribute("muted", "");
-    video.setAttribute("playsinline", "");
-    video.setAttribute("autoplay", "");
-    video.preload = "auto";
-
-    const p = video.play();
-    if (p && typeof p.catch === "function") p.catch(() => {});
+  // s'assurer qu'une source existe
+  const hasSource = v.querySelector("source") && v.querySelector("source").getAttribute("src");
+  if (!hasSource) {
+    const src = document.createElement("source");
+    src.src = "assets/bg_silent.mp4";
+    src.type = "video/mp4";
+    v.appendChild(src);
   }
 
-  function boot() {
-    const bgVideo = document.getElementById("bgVideo");
-    if (!bgVideo) {
-      console.warn("[bgVideo] introuvable dans le DOM");
-      return;
-    }
+  // Forcer attributs iOS
+  v.muted = true;
+  v.playsInline = true;
+  v.setAttribute("playsinline", "");
+  v.setAttribute("muted", "");
+  v.setAttribute("autoplay", "");
+  v.loop = true;
 
-    bgVideo.setAttribute("src", VIDEO_SRC);
-    forcePlay(bgVideo);
-
-    const retry = () => forcePlay(bgVideo);
-    ["click","touchstart","pointerdown","keydown"].forEach(evt =>
-      window.addEventListener(evt, retry, { once: true, passive: true })
-    );
-
-    bgVideo.addEventListener("error", () => {
-      console.warn("[bgVideo] erreur chargement. Vérifie:", VIDEO_SRC);
-    });
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", boot);
-  } else {
-    boot();
-  }
+  const tryPlay = () => v.play().catch(()=>{});
+  // iOS bloque souvent tant qu'il n'y a pas d'interaction utilisateur
+  document.addEventListener("touchstart", tryPlay, {passive:true});
+  document.addEventListener("click", tryPlay);
+  // tente quand même
+  tryPlay();
 })();
-/* END:BG-VIDEO-ULTRA */
+/* END:BGVIDEO_IOS_SAFE */
+
+
+/* === BG VIDEO HARDENING (iOS/Safari) === */
+(function () {
+  function hardenVideo(v, fallbackSrc) {
+    if (!v) return;
+    try {
+      v.controls = false;
+      v.removeAttribute("controls");
+      v.setAttribute("controlslist", "nodownload noplaybackrate noremoteplayback");
+      v.disablePictureInPicture = true;
+      v.playsInline = true;
+      v.setAttribute("playsinline", "");
+      v.setAttribute("webkit-playsinline", "");
+      v.muted = true;
+      v.setAttribute("muted", "");
+      v.setAttribute("preload", "auto");
+      if (!v.getAttribute("src") && !v.querySelector("source") && fallbackSrc) {
+        v.src = fallbackSrc;
+      }
+      const tryPlay = () => {
+        try {
+          const p = v.play();
+          if (p && p.catch) p.catch(() => {});
+        } catch (e) {}
+      };
+      v.addEventListener("loadedmetadata", tryPlay, { once: true });
+      v.addEventListener("canplay", tryPlay);
+      tryPlay();
+    } catch (e) {}
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    hardenVideo(document.getElementById("bgVideo"), "assets/bg_silent.mp4");
+    hardenVideo(document.getElementById("brandVideo"), null);
+  });
+})();
+
+
+
+document.addEventListener('DOMContentLoaded', ()=>{ const bgVideo=document.getElementById('bgVideo'); forcePlayInline(bgVideo); });
+
+// === BG VIDEO HARDENING (autoplay iOS + no-controls) ===
+document.addEventListener("DOMContentLoaded", () => {
+  const v = document.getElementById("bgVideo");
+  if (!v) return;
+
+  // force attributes
+  v.muted = true;
+  v.loop = true;
+  v.autoplay = true;
+  v.playsInline = true;
+  v.setAttribute("muted", "");
+  v.setAttribute("playsinline", "");
+  v.setAttribute("webkit-playsinline", "");
+  v.setAttribute("preload", "auto");
+  v.removeAttribute("controls");
+
+  // ensure not hidden by classes
+  v.classList.remove("hidden");
+  v.classList.add("bg-media");
+
+  // ensure a source exists
+  const hasSource = v.querySelector("source");
+  if (!hasSource) {
+    const src = document.createElement("source");
+    src.src = "/assets/bg.mp4";
+    src.type = "video/mp4";
+    v.appendChild(src);
+  } else {
+    if (!hasSource.getAttribute("src")) hasSource.setAttribute("src", "/assets/bg.mp4");
+  }
+
+  // try play (iOS will allow only if muted + inline)
+  const tryPlay = () => {
+    const r = v.play();
+    if (r && typeof r.catch === "function") r.catch(() => {});
+  };
+  tryPlay();
+
+  // If iOS blocks on first load, retry after first user interaction
+  const once = () => {
+    tryPlay();
+    window.removeEventListener("touchstart", once, true);
+    window.removeEventListener("click", once, true);
+  };
+  window.addEventListener("touchstart", once, true);
+  window.addEventListener("click", once, true);
+});
+
+// === BG VIDEO IOS RENDER FIX ===
+document.addEventListener("DOMContentLoaded", () => {
+  const v = document.getElementById("bgVideo");
+  if (!v) return;
+
+  // hard attributes
+  v.muted = true;
+  v.loop = true;
+  v.autoplay = true;
+  v.playsInline = true;
+  v.setAttribute("muted", "");
+  v.setAttribute("playsinline", "");
+  v.setAttribute("webkit-playsinline", "");
+  v.setAttribute("preload", "auto");
+  v.removeAttribute("controls");
+
+  // iOS: force paint of first frame
+  const forceFrame = () => {
+    try {
+      if (v.readyState >= 1) {
+        v.currentTime = 0.01;
+      }
+    } catch (e) {}
+  };
+  v.addEventListener("loadedmetadata", forceFrame, { once: true });
+  v.addEventListener("canplay", forceFrame, { once: true });
+
+  const tryPlay = () => {
+    const r = v.play();
+    if (r && r.catch) r.catch(() => {});
+  };
+  tryPlay();
+
+  // fallback: first user interaction
+  const once = () => {
+    tryPlay();
+    window.removeEventListener("touchstart", once, true);
+    window.removeEventListener("click", once, true);
+  };
+  window.addEventListener("touchstart", once, true);
+  window.addEventListener("click", once, true);
+});
+
+// === iOS autoplay hardening for background video ===
+(function () {
+  const v = document.getElementById('bgVideo');
+  if (!v) return;
+
+  // Force attributes/properties (iOS is picky)
+  v.muted = true;
+  v.autoplay = true;
+  v.loop = true;
+  v.playsInline = true;
+  v.setAttribute('muted', '');
+  v.setAttribute('playsinline', '');
+  v.removeAttribute('controls');
+
+  const tryPlay = () => {
+    const p = v.play();
+    if (p && typeof p.catch === 'function') p.catch(() => {});
+  };
+
+  // Try immediately
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    tryPlay();
+  } else {
+    document.addEventListener('DOMContentLoaded', tryPlay, { once: true });
+  }
+
+  // Then on first user gesture (Safari requirement)
+  const kick = () => { tryPlay(); cleanup(); };
+  const cleanup = () => {
+    window.removeEventListener('touchstart', kick, true);
+    window.removeEventListener('click', kick, true);
+  };
+  window.addEventListener('touchstart', kick, true);
+  window.addEventListener('click', kick, true);
+})();

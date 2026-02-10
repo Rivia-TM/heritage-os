@@ -9,13 +9,19 @@
 
 <body>
   <!-- Background layer (image OR video). Controlled by js/app.js -->
-  <div class="bg" aria-hidden="true">
-    <img id="bgImage" class="bg-media hidden" alt="" />
+    <div class="bg" aria-hidden="true">
   <video id="bgVideo" class="bg-media" autoplay muted loop playsinline preload="auto">
-  <source src="assets/bg.mp4" type="video/mp4">
-</video
-    <div class="bg-overlay"></div>
-  </div>
+    <source src="/assets/bg.mp4" type="video/mp4">
+  </video>
+  <div class="bg-overlay"></div>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
 
   <main class="page">
     <section class="auth" aria-label="Connexion Héritage OS">
@@ -23,7 +29,82 @@
       <!-- Logo layer (image OR video). Controlled by js/app.js -->
       <div class="brand" aria-hidden="true">
         <img id="brandImage" class="brand-media hidden" alt="HÉRITAGE OS" />
-        <video id="brandVideo" class="brand-media hidden" autoplay muted loop playsinline></video>
+        <video id="brandVideo" class="brand-media hidden" autoplay muted loop playsinline preload="auto">
+          <source src="assets/bg.mp4" type="video/mp4" />
+        </video>
+      </div>
+
+      <h1 class="title" id="title">Connectez-vous<br/>pour accéder à votre espace.</h1>
+
+      <!-- Step 1 (email) -->
+      <div id="stepEmail" class="step">
+        <div class="field">
+          <input id="email" class="input" type="email" inputmode="email" autocomplete="username" placeholder="Adresse e-mail" />
+          <button id="arrowEmail" class="go" type="button" aria-label="Continuer">
+            <span aria-hidden="true">→</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 2 (password) -->
+      <div id="stepPassword" class="step hidden">
+        <div class="field">
+          <input id="password" class="input" type="password" autocomplete="current-password" placeholder="Mot de passe" />
+          <button id="arrowPassword" class="go" type="button" aria-label="Se connecter">
+            <span aria-hidden="true">→</span>
+          </button>
+        </div>
+      </div>
+
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+
+      <!-- Footer bar (always bottom) -->
+      <footer class="footer">
+        <label class="remember">
+          <input id="remember" type="checkbox" />
+          <span>Se souvenir de moi</span>
+        </label>
+
+        <a id="createAccount" class="footer-link" href="#">Créer un compte Héritage OS</a>
+
+        <a id="forgot" class="footer-link" href="#">Mot de passe oublié ?</a>
+      </footer>
+
+    </section>
+  </main>
+
+  <script src="js/app.js"></script>
+</body>
+</html><!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HÉRITAGE OS</title>
+  <link rel="stylesheet" href="css/heritage.css" />
+</head>
+
+<body>
+  <!-- Background layer (image OR video). Controlled by js/app.js -->
+    <div class="bg" aria-hidden="true">
+  <video id="bgVideo" class="bg-media" autoplay muted loop playsinline preload="auto">
+    <source src="/assets/bg.mp4" type="video/mp4">
+  </video>
+  <div class="bg-overlay"></div>
+</div>
+</div>
+
+</div>
+
+  <main class="page">
+    <section class="auth" aria-label="Connexion Héritage OS">
+
+      <!-- Logo layer (image OR video). Controlled by js/app.js -->
+      <div class="brand" aria-hidden="true">
+        <img id="brandImage" class="brand-media hidden" alt="HÉRITAGE OS" />
+        <video id="brandVideo" class="brand-media hidden" autoplay muted loop playsinline preload="auto">
+          <source src="assets/bg.mp4" type="video/mp4" />
+        </video>
       </div>
 
       <h1 class="title" id="title">Connectez-vous<br/>pour accéder à votre espace.</h1>
