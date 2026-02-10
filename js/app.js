@@ -342,3 +342,39 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("touchstart", once, true);
   window.addEventListener("click", once, true);
 });
+
+// === iOS autoplay hardening for background video ===
+(function () {
+  const v = document.getElementById('bgVideo');
+  if (!v) return;
+
+  // Force attributes/properties (iOS is picky)
+  v.muted = true;
+  v.autoplay = true;
+  v.loop = true;
+  v.playsInline = true;
+  v.setAttribute('muted', '');
+  v.setAttribute('playsinline', '');
+  v.removeAttribute('controls');
+
+  const tryPlay = () => {
+    const p = v.play();
+    if (p && typeof p.catch === 'function') p.catch(() => {});
+  };
+
+  // Try immediately
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    tryPlay();
+  } else {
+    document.addEventListener('DOMContentLoaded', tryPlay, { once: true });
+  }
+
+  // Then on first user gesture (Safari requirement)
+  const kick = () => { tryPlay(); cleanup(); };
+  const cleanup = () => {
+    window.removeEventListener('touchstart', kick, true);
+    window.removeEventListener('click', kick, true);
+  };
+  window.addEventListener('touchstart', kick, true);
+  window.addEventListener('click', kick, true);
+})();
