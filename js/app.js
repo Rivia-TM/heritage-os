@@ -378,3 +378,51 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener('touchstart', kick, true);
   window.addEventListener('click', kick, true);
 })();
+
+
+// === BG VIDEO: iOS autoplay hardening + retry on first user gesture ===
+(function () {
+  function setupBgVideo() {
+    const v = document.querySelector('video.bg-media');
+    if (!v) return;
+
+    // Force attributes for iOS/Safari
+    v.muted = true;
+    v.loop = true;
+    v.autoplay = true;
+    v.playsInline = true;
+    v.setAttribute('muted', '');
+    v.setAttribute('playsinline', '');
+    v.setAttribute('webkit-playsinline', '');
+    v.removeAttribute('controls');
+
+    const tryPlay = () => {
+      try {
+        const p = v.play();
+        if (p && typeof p.catch === 'function') p.catch(() => {});
+      } catch (e) {}
+    };
+
+    // Try immediately
+    tryPlay();
+
+    // Retry on first real gesture (iOS policy)
+    const once = () => {
+      tryPlay();
+      window.removeEventListener('touchstart', once, { passive: true });
+      window.removeEventListener('pointerdown', once, { passive: true });
+      window.removeEventListener('click', once, true);
+    };
+
+    window.addEventListener('touchstart', once, { passive: true, once: true });
+    window.addEventListener('pointerdown', once, { passive: true, once: true });
+    window.addEventListener('click', once, { capture: true, once: true });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupBgVideo);
+  } else {
+    setupBgVideo();
+  }
+})();
+
