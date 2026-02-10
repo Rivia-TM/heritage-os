@@ -1,90 +1,31 @@
-<!doctype html>
-<html lang="fr">
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>HÉRITAGE OS</title>
-  <link rel="stylesheet" href="/css/heritage.css"/>
+<meta charset="utf-8">
+<title>Héritage OS</title>
+<link rel="stylesheet" href="css/heritage.css">
 </head>
+
 <body>
-  <div class="bg" aria-hidden="true"></div>
 
-  <main class="page">
-    <section class="card">
-      <img class="logo" src="/assets/logo.png" alt="HÉRITAGE OS" onerror="this.style.display='none'"/>
+<div class="container">
 
-      <div id="view-login">
-        <h1>Connectez-vous<br/>pour accéder à votre espace.</h1>
+<img src="assets/logo.png" class="logo">
 
-        <div class="panel">
-          <div class="row">
-            <input id="login-email" class="input" type="email" placeholder="Adresse e-mail" autocomplete="email"/>
-            <button id="btn-magic" class="btn primary" type="button">→</button>
-          </div>
+<div class="title">
+Connectez-vous<br>
+pour accéder à votre espace.
+</div>
 
-          <div class="row" style="margin-top:10px;">
-            <input id="login-pass" class="input" type="password" placeholder="Mot de passe (optionnel)" autocomplete="current-password"/>
-            <button id="btn-login" class="btn" type="button">Connexion</button>
-          </div>
+<input class="input" placeholder="Adresse e-mail">
 
-          <div class="small">
-            <label class="chk">
-              <input id="remember" type="checkbox"/>
-              <span>Se souvenir de moi</span>
-            </label>
+</div>
 
-            <a class="link" href="#signup" id="go-signup">Créer un compte Héritage OS</a>
-            <a class="link" href="#reset" id="go-reset">Mot de passe oublié ?</a>
-          </div>
+<div class="footer">
+<span>Se souvenir de moi</span>
+<span>Créer un compte Héritage OS</span>
+<span>Mot de passe oublié ?</span>
+</div>
 
-          <div id="msg" class="small" style="justify-content:center; margin-top:12px;"></div>
-        </div>
-      </div>
-
-      <div id="view-signup" style="display:none;">
-        <h1>Créer un compte</h1>
-        <div class="panel">
-          <div class="row">
-            <input id="su-email" class="input" type="email" placeholder="Adresse e-mail" autocomplete="email"/>
-          </div>
-          <div class="row" style="margin-top:10px;">
-            <input id="su-pass" class="input" type="password" placeholder="Mot de passe" autocomplete="new-password"/>
-            <button id="btn-signup" class="btn primary" type="button">Créer</button>
-          </div>
-          <div class="small">
-            <a class="link" href="#login">← Retour</a>
-          </div>
-          <div id="msg2" class="small" style="justify-content:center; margin-top:12px;"></div>
-        </div>
-      </div>
-
-      <div id="view-reset" style="display:none;">
-        <h1>Réinitialiser le mot de passe</h1>
-        <div class="panel">
-          <div class="row">
-            <input id="rp-email" class="input" type="email" placeholder="Adresse e-mail" autocomplete="email"/>
-            <button id="btn-reset" class="btn primary" type="button">Envoyer</button>
-          </div>
-          <div class="small">
-            <a class="link" href="#login">← Retour</a>
-          </div>
-          <div id="msg3" class="small" style="justify-content:center; margin-top:12px;"></div>
-        </div>
-      </div>
-
-      <div id="view-private" style="display:none;">
-        <div class="panel private">
-          <div class="badge">Connecté</div>
-          <h1 style="text-align:left; margin-top:10px;">Votre espace</h1>
-          <div id="who" class="small" style="justify-content:flex-start;"></div>
-          <hr class="sep"/>
-          <button id="btn-logout" class="btn" type="button">Se déconnecter</button>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="/js/app.js"></script>
 </body>
 </html>
