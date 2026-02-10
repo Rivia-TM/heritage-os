@@ -126,3 +126,112 @@ input[type="email"], input[type="text"], .email-input, .login-input{
     gap:12px;
   }
 }
+
+/* === HERITAGE HARD LAYOUT (auto) === */
+/* Objectif: centrage propre + footer toujours visible, impossible à “perdre”. */
+
+html, body{
+  height:100%;
+  margin:0 !important;
+  padding:0 !important;
+}
+
+/* Certains styles existants peuvent cacher le footer */
+body{
+  overflow:auto !important;
+}
+
+/* Root wrapper */
+#login-root{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  box-sizing:border-box;
+  padding:72px 24px 90px 24px; /* réserve l’espace du footer */
+}
+
+/* Logo */
+.login-header{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin-bottom:26px;
+}
+.login-logo{
+  width:min(440px, 78vw) !important;
+  height:auto !important;
+  opacity:0.98;
+}
+
+/* Titres: on cible large pour ne pas dépendre d’une classe */
+h1, h2, .title, .login-title{
+  text-align:center !important;
+  font-size:clamp(36px, 3.8vw, 56px) !important;
+  line-height:1.12 !important;
+  margin:0 0 18px 0 !important;
+}
+p, .subtitle, .login-subtitle{
+  text-align:center !important;
+  font-size:clamp(16px, 1.7vw, 21px) !important;
+  margin:0 0 22px 0 !important;
+  opacity:0.92;
+}
+
+/* Inputs */
+input[type="email"], input[type="text"], input[type="password"], .email-input, .login-input{
+  width:min(620px, 88vw) !important;
+  height:60px !important;
+  border-radius:16px !important;
+  font-size:18px !important;
+  padding:0 18px !important;
+  box-sizing:border-box;
+}
+
+/* Footer: fixé en bas, donc visible quoi qu’il arrive */
+#login-footer.login-footer{
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+  width:100%;
+  box-sizing:border-box;
+  padding:18px 28px;
+  display:flex !important;
+  justify-content:space-between;
+  align-items:center;
+  gap:18px;
+  font-size:14px;
+  opacity:0.95;
+  background:transparent; /* garde ton style clean */
+}
+
+#login-footer .remember{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  white-space:nowrap;
+}
+
+#login-footer .footer-link{
+  text-decoration:none;
+  opacity:0.92;
+}
+#login-footer .footer-link:hover{
+  opacity:1;
+  text-decoration:underline;
+}
+
+/* Mobile: footer en colonne */
+@media (max-width: 720px){
+  #login-root{ padding:64px 18px 120px 18px; }
+  .login-logo{ width:min(380px, 84vw) !important; }
+  #login-footer.login-footer{
+    flex-direction:column;
+    justify-content:center;
+    text-align:center;
+    gap:12px;
+    padding:16px 18px;
+  }
+}
