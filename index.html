@@ -13,14 +13,16 @@
 
 <img src="assets/logo.png" class="logo" alt="Héritage">
 
-<h1 class="title">
-Connectez-vous<br>
-pour accéder à votre espace.
-</h1>
+<div class="content">
+  <h1 class="title">
+    Connectez-vous<br>
+    pour accéder à votre espace.
+  </h1>
 
-<div class="input-wrap">
-<input type="email" placeholder="Adresse e-mail">
-<button class="arrow">→</button>
+  <form class="input-wrap" action="#" method="post">
+    <input type="email" placeholder="Adresse e-mail" autocomplete="email" inputmode="email">
+    <button class="arrow" type="submit" aria-label="Continuer">→</button>
+  </form>
 </div>
 
 </main>
@@ -28,8 +30,8 @@ pour accéder à votre espace.
 <footer class="footer">
 
 <label class="remember">
-<input type="checkbox">
-<span>Se souvenir de moi</span>
+  <input type="checkbox">
+  <span>Se souvenir de moi</span>
 </label>
 
 <a href="#" class="link">Créer un compte Héritage OS</a>
