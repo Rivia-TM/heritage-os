@@ -1,0 +1,190 @@
+/* === HERITAGE_UI_HARD_OVERRIDE ===
+   BUILD: 20260211T191810Z
+   But: forcer un rendu premium et stable, même si d autres CSS existent.
+*/
+:root{
+  --bg:#243f49;
+  --text:#e7ecef;
+  --muted:rgba(231,236,239,.74);
+  --stroke:rgba(255,255,255,.12);
+  --glassA:rgba(0,0,0,.18);
+  --glassB:rgba(0,0,0,.12);
+  --btn:rgba(255,255,255,.07);
+  --shadow:0 18px 70px rgba(0,0,0,.35);
+}
+
+*{box-sizing:border-box;}
+html,body{height:100%; margin:0; padding:0; background:var(--bg); color:var(--text);}
+
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  overflow:hidden; /* no scroll */
+}
+
+/* === LAYOUT FULLSCREEN === */
+.page{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+
+/* main is the visual center zone */
+main{
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0 24px;
+}
+
+/* center stack wrapper */
+.login, .auth, .login-box, .card, .content, .center, .container{
+  width:min(880px, 92vw);
+  margin:0 auto;
+  text-align:center;
+}
+
+/* === LOGO POSITION (higher + subtle dominance) === */
+.login-logo, .logo, header, .brand{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin:0 auto;
+}
+
+/* If logo is an IMG */
+.login-logo img, .logo img, header img{
+  height:62px;
+  width:auto;
+  opacity:.98;
+  filter:drop-shadow(0 12px 30px rgba(0,0,0,.22));
+}
+
+/* If logo is text */
+h1, .logo-text, .brand-text{
+  margin:0;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  font-weight:400;
+}
+
+/* Force the whole hero block to sit slightly higher, but keep form mid */
+.hero{
+  transform:translateY(-34px);
+}
+@media (min-width: 900px){
+  .hero{ transform:translateY(-44px); }
+}
+
+/* Title + subtitle (balanced) */
+h2, .title, .headline, .login-title{
+  margin:18px 0 10px;
+  font-size:clamp(30px, 3.6vw, 42px);
+  line-height:1.08;
+  font-weight:400;
+  color:var(--text);
+  opacity:.92;
+}
+
+p, .subtitle, .sub, .login-subtitle{
+  margin:0 0 20px;
+  font-size:clamp(16px, 2.1vw, 20px);
+  color:var(--muted);
+}
+
+/* === INPUT BAR (centered, pro, arrow fixed at end) === */
+form{margin:0 auto;}
+
+.input-wrap, .input-row, .field-row{
+  position:relative;
+  width:min(720px, 92vw);
+  margin:0 auto;
+}
+
+input[type="email"], input[type="text"], .email, .input, .field{
+  width:100%;
+  height:56px;
+  border-radius:16px;
+  border:1px solid var(--stroke);
+  background:linear-gradient(180deg, var(--glassA), var(--glassB));
+  color:var(--text);
+  padding:0 64px 0 22px; /* space for arrow */
+  outline:none;
+  box-shadow:var(--shadow);
+  font-size:16px;
+}
+input::placeholder{ color:rgba(231,236,239,.55); }
+
+/* Arrow button always at the end, visually consistent */
+.submit-arrow, .arrow, .btn-arrow, button[type="submit"]{
+  position:absolute !important;
+  right:10px !important;
+  top:50% !important;
+  transform:translateY(-50%) !important;
+  width:44px;
+  height:44px;
+  border-radius:14px;
+  border:1px solid var(--stroke);
+  background:var(--btn);
+  color:var(--text);
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+  box-shadow:0 10px 30px rgba(0,0,0,.25);
+}
+.submit-arrow:hover, .arrow:hover, .btn-arrow:hover, button[type="submit"]:hover{
+  background:rgba(255,255,255,.10);
+}
+
+/* If the submit button is not inside wrapper, we still style it */
+form button[type="submit"]{ margin-left:0; }
+
+/* === FOOTER: aligned, not "4km away" === */
+.login-footer{
+  position:fixed;
+  left:0; right:0; bottom:0;
+  padding:18px 24px 26px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.login-footer .footer-inner{
+  width:min(980px, 92vw);
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  align-items:center;
+  gap:12px;
+  font-size:14px;
+  color:rgba(231,236,239,.80);
+}
+
+.login-footer .left{justify-self:start;}
+.login-footer .center{justify-self:center;}
+.login-footer .right{justify-self:end;}
+
+.login-footer a{
+  color:rgba(231,236,239,.80);
+  text-decoration:none;
+}
+.login-footer a:hover{ text-decoration:underline; }
+
+.login-footer label{ display:inline-flex; gap:10px; align-items:center; }
+.login-footer input[type="checkbox"]{
+  width:18px; height:18px;
+  border-radius:6px;
+  border:1px solid var(--stroke);
+  background:rgba(0,0,0,.18);
+  vertical-align:middle;
+}
+
+/* Hide any legacy footer blocks */
+footer, .footer{ display:none !important; }
+
+/* Small-height fallback: allow scroll rather than break layout */
+@media (max-height: 720px){
+  body{overflow:auto;}
+  main{padding:36px 24px 140px;}
+  .hero{transform:none;}
+}
+/* === END OVERRIDE === */
