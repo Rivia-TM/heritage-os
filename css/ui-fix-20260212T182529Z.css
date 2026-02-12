@@ -1,0 +1,146 @@
+/* === HERITAGE_UI_FIX ===
+   BUILD: 20260212T182529Z
+   Objectif: input pas full-width, arrow collée au bout, footer 1 ligne, pas de wrap débile.
+*/
+:root{
+  --bg:#243f49;
+  --text:#e7ecef;
+  --muted:rgba(231,236,239,.74);
+  --stroke:rgba(255,255,255,.12);
+  --glassA:rgba(0,0,0,.18);
+  --glassB:rgba(0,0,0,.12);
+  --btn:rgba(255,255,255,.07);
+  --shadow:0 18px 70px rgba(0,0,0,.35);
+}
+
+*{box-sizing:border-box;}
+html,body{height:100%; margin:0; padding:0; background:var(--bg); color:var(--text);}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  overflow:hidden; /* no scroll */
+}
+
+.page{min-height:100vh; display:flex; flex-direction:column;}
+main{flex:1; display:flex; align-items:center; justify-content:center; padding:0 24px;}
+.hero{ width:min(900px, 92vw); margin:0 auto; text-align:center; transform:translateY(-36px); }
+
+.login-logo img, .logo img, header img{ height:64px; width:auto; opacity:.98; filter:drop-shadow(0 12px 30px rgba(0,0,0,.22)); }
+
+h2, .title, .headline, .login-title{
+  margin:18px 0 12px;
+  font-size:clamp(30px, 3.6vw, 42px);
+  line-height:1.08;
+  font-weight:400;
+  color:var(--text);
+  opacity:.92;
+}
+p, .subtitle, .sub, .login-subtitle{
+  margin:0 0 18px;
+  font-size:clamp(16px, 2.1vw, 20px);
+  color:var(--muted);
+}
+
+/* === INPUT WRAP: not full width, perfectly centered === */
+.input-wrap{
+  position:relative;
+  width:min(560px, 86vw);     /* <<< STOP full-width */
+  margin:0 auto;
+}
+
+/* Input (pro glass) */
+.email-input,
+input[type="email"],
+input[type="text"]{
+  width:100%;
+  height:56px;
+  border-radius:16px;
+  border:1px solid var(--stroke);
+  background:linear-gradient(180deg, var(--glassA), var(--glassB));
+  color:var(--text);
+  padding:0 64px 0 22px; /* room for arrow */
+  outline:none;
+  box-shadow:var(--shadow);
+  font-size:16px;
+}
+input::placeholder{ color:rgba(231,236,239,.55); }
+
+/* Arrow always at the END of the input */
+.submit-arrow,
+button[type="submit"],
+.btn-arrow{
+  position:absolute !important;
+  right:10px !important;
+  top:50% !important;
+  transform:translateY(-50%) !important;
+  width:44px;
+  height:44px;
+  border-radius:14px;
+  border:1px solid var(--stroke);
+  background:var(--btn);
+  color:var(--text);
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+  box-shadow:0 10px 30px rgba(0,0,0,.25);
+}
+.submit-arrow:hover, button[type="submit"]:hover{ background:rgba(255,255,255,.10); }
+
+/* Kill any legacy layout that forces weird widths */
+form{ margin:0 auto; }
+form *{ max-width:100%; }
+
+/* === FOOTER: 1 line, no wrap, aligned === */
+.login-footer{
+  position:fixed;
+  left:0; right:0; bottom:0;
+  padding:18px 24px 26px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.footer-inner{
+  width:min(980px, 92vw);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:18px;
+  font-size:14px;
+  color:rgba(231,236,239,.80);
+}
+
+/* STOP the vertical-letter nonsense */
+.footer-inner, .footer-inner *{
+  writing-mode:horizontal-tb !important;
+  text-orientation:mixed !important;
+}
+
+.footer-inner a{
+  color:rgba(231,236,239,.80);
+  text-decoration:none;
+  white-space:nowrap;           /* <<< no wrap */
+}
+.footer-inner a:hover{ text-decoration:underline; }
+
+.footer-inner label{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  white-space:nowrap;           /* <<< no wrap */
+}
+.footer-inner input[type="checkbox"]{
+  width:18px; height:18px;
+  border-radius:6px;
+  border:1px solid var(--stroke);
+  background:rgba(0,0,0,.18);
+}
+
+/* Hide any legacy footers */
+footer, .footer{ display:none !important; }
+
+/* Small-height fallback */
+@media (max-height: 720px){
+  body{overflow:auto;}
+  main{padding:36px 24px 140px;}
+  .hero{transform:none;}
+}
