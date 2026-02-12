@@ -188,7 +188,66 @@
       .right, .remember { min-width: auto; }
       .footer { font-size: 13px; }
     }
-  </style>
+  
+/* HERITAGE_POLISH:1770924065431592523 */
+
+/* Slightly finer typography + scale down a touch */
+.title {
+  font-weight: 500;
+  letter-spacing: .15px;
+  font-size: clamp(22px, 3.0vw, 40px);
+  line-height: 1.18;
+}
+
+.logo {
+  max-width: min(560px, 72vw);
+  transform: translateY(-18px);
+}
+
+/* Field: a bit slimmer */
+.field {
+  width: min(680px, 84vw);
+  padding: 9px;
+}
+
+.field input {
+  font-size: 17px;
+  padding: 13px 14px;
+  background: transparent !important;
+  color: var(--text) !important;
+  -webkit-text-fill-color: var(--text) !important;
+  caret-color: rgba(231,236,239,.85);
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+/* Button slightly slimmer */
+.go {
+  width: 50px;
+  height: 50px;
+  border-radius: 15px;
+}
+
+/* iOS Safari / WebKit autofill: kill the yellow */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-text-fill-color: var(--text) !important;
+  caret-color: rgba(231,236,239,.85) !important;
+  transition: background-color 999999s ease-in-out 0s;
+  box-shadow: 0 0 0px 1000px rgba(0,0,0,0) inset !important;
+  background-color: transparent !important;
+  filter: none !important;
+}
+
+/* Keep footer readable but a touch tighter */
+.footer {
+  font-size: 13.5px;
+}
+
+</style>
 </head>
 
 <body>
