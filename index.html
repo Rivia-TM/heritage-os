@@ -1,5 +1,4 @@
-<!-- HERITAGE_BUILD:20260211T191810Z -->
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
 <meta charset="utf-8">
@@ -70,53 +69,45 @@ font-size:14px;
 </style>
 
 <link rel="stylesheet" href="css/ui-20260211T191810Z.css?v=20260211T191810Z">
+<link rel="stylesheet" href="css/heritage-ui-lock.css" />
 </head>
-
 <body>
+<!-- HERITAGE_UI_LOCK_BUILD:1770922638:1770922638994211259 -->
 <div class="page">
-  <main>
-    <div class="login hero">
-      <img src="assets/logo.png" class="logo">
+  <header class="brand" aria-label="Héritage">
+    <img src="assets/logo.png" alt="HÉRITAGE" />
+  </header>
 
-<div class="text">
-Connectez-vous<br>pour accéder à votre espace.
-</div>
+  <main class="hero" role="main">
+    <h1>Connectez-vous<br/>pour accéder à votre espace.</h1>
 
-<div class="input">
-<input placeholder="Adresse e-mail">
-<button>→</button>
-</div>
-
-<footer>
-
-<div>
-<input type="checkbox"> Se souvenir de moi
-</div>
-
-<div>
-Créer un compte Héritage OS
-</div>
-
-<div>
-Mot de passe oublié ?
-</div>
-
-</footer>
-    </div>
+    <form class="input-wrap" id="login-form" autocomplete="on">
+      <input type="email" id="email" name="email" placeholder="Adresse e-mail" autocomplete="email" required />
+      <button class="submit-arrow" type="submit" aria-label="Continuer">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M5 12h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </form>
   </main>
-  <div class="login-footer">
-  <div class="footer-inner">
+
+  <footer class="footer" role="contentinfo">
     <div class="left">
-      <label><input type="checkbox"> <span>Se souvenir de moi</span></label>
+      <input type="checkbox" id="remember" name="remember" />
+      <label for="remember">Se souvenir de moi</label>
     </div>
-    <div class="center">
-      <a href="#" id="create-account-link">Créer un compte Héritage OS</a>
-    </div>
+
+    <nav class="links" aria-label="Liens">
+      <a href="#">Créer un compte Héritage OS</a>
+    </nav>
+
     <div class="right">
-      <a href="#" id="forgot-password-link">Mot de passe oublié ?</a>
+      <a href="#">Mot de passe oublié ?</a>
     </div>
-  </div>
+  </footer>
 </div>
-</div>
+
+
 </body>
 </html>
