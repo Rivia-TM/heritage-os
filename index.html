@@ -2,374 +2,103 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Héritage OS</title>
-  <!-- HERITAGE_UI_BUILD:1770923534228441938 -->
-  <style>
-    :root {
-      --bg: #243f49;
-      --text: #e7ecef;
-      --muted: rgba(231,236,239,.72);
-      --stroke: rgba(255,255,255,.14);
-      --glass: rgba(0,0,0,.18);
-      --glass2: rgba(255,255,255,.06);
-      --shadow: rgba(0,0,0,.35);
-      --radius: 18px;
-    }
-
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      overflow: hidden; /* no scroll by default */
-    }
-
-    /* allow scroll only on short screens */
-    @media (max-height: 740px) {
-      body { overflow: auto; }
-    }
-
-    .page {
-      min-height: 100vh;
-      display: grid;
-      grid-template-rows: 1fr auto 1fr auto; /* top air, main, air, footer */
-      padding: clamp(18px, 3vw, 36px);
-      padding-bottom: calc(clamp(18px, 3vw, 36px) + env(safe-area-inset-bottom));
-      gap: 0;
-    }
-
-    .main {
-      grid-row: 2;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      gap: clamp(14px, 2.2vw, 22px);
-    }
-
-    .logo {
-      display: block;
-      max-width: min(520px, 74vw);
-      height: auto;
-      opacity: .95;
-      transform: translateY(-10px); /* logo slightly higher */
-      filter: drop-shadow(0 8px 22px rgba(0,0,0,.22));
-      user-select: none;
-      -webkit-user-drag: none;
-    }
-
-    .title {
-      margin: 0;
-      font-weight: 500;
-      letter-spacing: .2px;
-      line-height: 1.15;
-      font-size: clamp(26px, 3.4vw, 44px);
-      color: rgba(231,236,239,.92);
-    }
-
-    .field {
-      width: min(720px, 86vw);
-      display: grid;
-      grid-template-columns: 1fr auto;
-      align-items: center;
-      gap: 10px;
-      padding: 10px;
-      border-radius: var(--radius);
-      background: linear-gradient(180deg, rgba(0,0,0,.14), rgba(0,0,0,.10));
-      border: 1px solid rgba(255,255,255,.10);
-      box-shadow: 0 18px 50px rgba(0,0,0,.18);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-    }
-
-    .field input {
-      width: 100%;
-      border: 0;
-      outline: 0;
-      background: transparent;
-      color: var(--text);
-      font-size: 18px;
-      padding: 14px 14px;
-      border-radius: 14px;
-      caret-color: rgba(231,236,239,.85);
-    }
-
-    .field input::placeholder {
-      color: rgba(231,236,239,.55);
-    }
-
-    .go {
-      width: 52px;
-      height: 52px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 10px 26px rgba(0,0,0,.20);
-      transition: transform .12s ease, background .12s ease, border-color .12s ease;
-      user-select: none;
-    }
-    .go:active {
-      transform: scale(.98);
-    }
-    .go:hover {
-      background: rgba(255,255,255,.09);
-      border-color: rgba(255,255,255,.18);
-    }
-
-    .go svg {
-      width: 20px;
-      height: 20px;
-      opacity: .92;
-    }
-
-    .footer {
-      grid-row: 4;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      padding-top: 10px;
-      border-top: 1px solid rgba(255,255,255,.06);
-      color: rgba(231,236,239,.70);
-      font-size: 14px;
-    }
-
-    .remember {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      min-width: 160px;
-    }
-    .remember input {
-      width: 18px;
-      height: 18px;
-      accent-color: rgba(231,236,239,.9);
-    }
-
-    .links {
-      display: flex;
-      gap: 28px;
-      align-items: center;
-      justify-content: center;
-      flex: 1;
-      white-space: nowrap;
-    }
-
-    .links a {
-      color: rgba(231,236,239,.70);
-      text-decoration: none;
-      padding: 8px 10px;
-      border-radius: 12px;
-      transition: background .12s ease, color .12s ease;
-    }
-    .links a:hover {
-      background: rgba(255,255,255,.06);
-      color: rgba(231,236,239,.92);
-    }
-
-    .right {
-      min-width: 160px;
-      text-align: right;
-    }
-
-    /* Mobile tweaks */
-    @media (max-width: 560px) {
-      .links { gap: 14px; }
-      .right, .remember { min-width: auto; }
-      .footer { font-size: 13px; }
-    }
-  
-/* HERITAGE_POLISH:1770924065431592523 */
-
-/* Slightly finer typography + scale down a touch */
-.title {
-  font-weight: 500;
-  letter-spacing: .15px;
-  font-size: clamp(22px, 3.0vw, 40px);
-  line-height: 1.18;
-}
-
-.logo {
-  max-width: min(560px, 72vw);
-  transform: translateY(-18px);
-}
-
-/* Field: a bit slimmer */
-.field {
-  width: min(680px, 84vw);
-  padding: 9px;
-}
-
-.field input {
-  font-size: 17px;
-  padding: 13px 14px;
-  background: transparent !important;
-  color: var(--text) !important;
-  -webkit-text-fill-color: var(--text) !important;
-  caret-color: rgba(231,236,239,.85);
-  appearance: none;
-  -webkit-appearance: none;
-}
-
-/* Button slightly slimmer */
-.go {
-  width: 50px;
-  height: 50px;
-  border-radius: 15px;
-}
-
-/* iOS Safari / WebKit autofill: kill the yellow */
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-textarea:-webkit-autofill,
-select:-webkit-autofill {
-  -webkit-text-fill-color: var(--text) !important;
-  caret-color: rgba(231,236,239,.85) !important;
-  transition: background-color 999999s ease-in-out 0s;
-  box-shadow: 0 0 0px 1000px rgba(0,0,0,0) inset !important;
-  background-color: transparent !important;
-  filter: none !important;
-}
-
-/* Keep footer readable but a touch tighter */
-.footer {
-  font-size: 13.5px;
-}
-
-
-/* HERITAGE: hotfix anchors + autofill (no layout changes) */
-a, a:visited { color: inherit; text-decoration: none; }
-a:hover { opacity: .9; }
-
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus {
-  -webkit-text-fill-color: inherit;
-  transition: background-color 999999s ease-in-out 0s;
-  box-shadow: 0 0 0px 1000px rgba(0,0,0,0.12) inset !important;
-  border: 1px solid rgba(255,255,255,0.12) !important;
-}
-
-
-/* HERITAGE: clickable links + prevent overlay capturing taps */
-a, a:visited { color: inherit; text-decoration: none; pointer-events: auto; }
-a:hover { opacity: .92; }
-
-#bg, .bg, .background, .overlay, .glass-bg, .blur, .veil {
-  pointer-events: none !important;
-}
-
-.page, main, .hero, .card, .panel, .footer, .footer-links, .actions {
-  position: relative;
-  z-index: 2;
-}
-
-</style>
-
-<!-- HERI_SUPABASE_FORCE_START -->
-<!-- UI_RESTORE_SUPABASE:1770925538094990235 -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-(function(){
-  // Injected by HERITAGE-OS. Goal: always have a GLOBAL client for every page.
-  var URL = '';
-  var KEY = '';
-
-  // If your index already defines them somewhere else, keep that.
-  try {
-    if (!URL && (window.SUPABASE_URL || window.supabaseUrl)) URL = window.SUPABASE_URL || window.supabaseUrl;
-    if (!KEY && (window.SUPABASE_ANON_KEY || window.supabaseAnonKey || window.supabaseKey)) KEY = window.SUPABASE_ANON_KEY || window.supabaseAnonKey || window.supabaseKey;
-  } catch(e){}
-
-  // Create client only if we can. Do NOT show public UI error.
-  try {
-    if (window.supabase && typeof window.supabase.createClient === "function" && URL && KEY) {
-      window.supabaseClient = window.supabase.createClient(URL, KEY);
-      window.__SUPABASE_READY__ = true;
-    } else {
-      window.__SUPABASE_READY__ = false;
-      // console only (no UI leak)
-      console.warn("[HERITAGE] Supabase client not created. Missing URL/KEY or library.");
-    }
-  } catch(e) {
-    window.__SUPABASE_READY__ = false;
-    console.warn("[HERITAGE] Supabase init error:", e);
-  }
-})();
-</script>
-<!-- HERI_SUPABASE_FORCE_END -->
-
+  <link rel="stylesheet" href="/css/app.css?v=1" />
 </head>
-
 <body>
   <div class="page">
-    <div class="main">
-      <img class="logo" src="assets/logo.png" alt="Héritage OS" />
-      <h1 class="title">Connectez-vous<br/>pour accéder à votre espace.</h1>
+    <div class="bg-glow"></div>
 
-      <form class="field" id="loginForm" autocomplete="on">
-        <input id="email" name="email" type="email" inputmode="email" autocomplete="email"
-               placeholder="Adresse e-mail" aria-label="Adresse e-mail" />
-        <button class="go" type="submit" aria-label="Continuer">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M5 12h12"></path>
-            <path d="M13 6l6 6-6 6"></path>
-          </svg>
-        </button>
-      </form>
+    <div class="shell">
+      <div class="logo">
+        <img src="/assets/logo.png" alt="Héritage" onerror="this.style.display='none'">
+      </div>
+
+      <div class="hero">Connectez-vous<br>pour accéder à votre espace.</div>
+
+      <div class="card">
+        <div id="stepEmail">
+          <div class="field">
+            <input id="email" type="email" autocomplete="email" placeholder="Adresse e-mail" inputmode="email" />
+            <button class="btn-arrow" id="nextBtn" aria-label="Continuer">→</button>
+          </div>
+        </div>
+
+        <div id="stepPass" style="display:none">
+          <div class="field">
+            <input id="password" type="password" autocomplete="current-password" placeholder="Mot de passe" />
+            <button class="btn-arrow" id="loginBtn" aria-label="Se connecter">→</button>
+          </div>
+          <div class="actions"><a href="#" id="backEmail">Retour</a><span></span></div>
+        </div>
+
+        <div class="actions">
+          <label class="chk"><input id="remember" type="checkbox" /><span>Se souvenir de moi</span></label>
+          <div class="links">
+            <a href="/forgot.html">Mot de passe oublié ?</a><span class="sep">|</span><a href="/signup.html">Créer un compte</a>
+          </div>
+        </div>
+
+        <div class="msg" id="msg"></div>
+      </div>
     </div>
 
     <div class="footer">
-      <label class="remember">
-        <input id="remember" type="checkbox" />
-        <span>Se souvenir de moi</span>
-      </label>
-
-      <div class="links">
-        <a href="#" id="createAccountLink"><a class='ui-link' href='signup.html'>Créer un compte Héritage OS</a></a>
-      </div>
-
-      <div class="right">
-        <a href="#" id="forgotPasswordLink" style="color: rgba(231,236,239,.70); text-decoration:none; padding:8px 10px; border-radius:12px;"><a class='ui-link' href='forgot.html'>Mot de passe oublié ?</a></a>
-      </div>
+      <a href="/signup.html">Créer un compte Héritage OS</a><span class="sep">·</span><a href="/forgot.html">Mot de passe oublié ?</a>
     </div>
   </div>
 
-  
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/config.js?v=1"></script>
+  <script src="/js/app.js?v=1"></script>
+  <script>
+    (function(){
+      const {$, setMsg, makeClient} = window.HeritageApp;
+      const msg = $("#msg");
+      const stepEmail = $("#stepEmail");
+      const stepPass = $("#stepPass");
+      const email = $("#email");
+      const password = $("#password");
+      const remember = $("#remember");
 
-<!-- HERI_LINK_ROUTER_START -->
-<!-- LINK_FIX:1770926221549009302 -->
-<script>
-(function(){
-  function go(href){ try{ window.location.href = href; }catch(e){} }
-  function bindByText(txt, href){
-    const nodes = Array.from(document.querySelectorAll("a, button, span, div, p, small"))
-      .filter(el => (el.textContent || "").trim() === txt);
-    nodes.forEach(el => {
-      el.style.cursor = "pointer";
-      el.addEventListener("click", function(e){ go(href); }, true);
-      el.addEventListener("touchend", function(e){ go(href); }, true);
-    });
-  }
-  document.addEventListener("DOMContentLoaded", function(){
-    bindByText("Créer un compte", "signup.html");
-    bindByText("Créer un compte Héritage OS", "signup.html");
-    bindByText("Mot de passe oublié ?", "forgot.html");
-  });
-})();
-</script>
-<!-- HERI_LINK_ROUTER_END -->
+      function showPass(){ stepEmail.style.display="none"; stepPass.style.display="block"; password.focus(); }
+      function showEmail(){ stepPass.style.display="none"; stepEmail.style.display="block"; email.focus(); }
 
+      $("#nextBtn").addEventListener("click", ()=>{
+        if(!email.value.trim()){ setMsg(msg,"Entrez votre e-mail.","error"); return; }
+        setMsg(msg,""); showPass();
+      });
+      $("#backEmail").addEventListener("click",(e)=>{ e.preventDefault(); showEmail(); });
+
+      email.addEventListener("keydown",(e)=>{ if(e.key==="Enter"){ e.preventDefault(); $("#nextBtn").click(); }});
+      password.addEventListener("keydown",(e)=>{ if(e.key==="Enter"){ e.preventDefault(); $("#loginBtn").click(); }});
+
+      $("#loginBtn").addEventListener("click", async ()=>{
+        setMsg(msg,"");
+        const em=email.value.trim(), pw=password.value;
+        if(!em){ setMsg(msg,"Entrez votre e-mail.","error"); showEmail(); return; }
+        if(!pw){ setMsg(msg,"Entrez votre mot de passe.","error"); return; }
+
+        const {client, error} = makeClient(remember.checked);
+        if(error || !client){ setMsg(msg,"Configuration Supabase manquante (URL / ANON KEY).","error"); return; }
+
+        $("#loginBtn").disabled=true;
+        try{
+          const {data, error:err} = await client.auth.signInWithPassword({ email: em, password: pw });
+          if(err){ setMsg(msg,"Identifiants incorrects.","error"); return; }
+          if(data?.session) window.location.href="/espace/";
+          else setMsg(msg,"Connexion impossible. Réessayez.","error");
+        } finally { $("#loginBtn").disabled=false; }
+      });
+
+      (async ()=>{
+        const {client, error} = makeClient(true);
+        if(error || !client) return;
+        const {data} = await client.auth.getSession();
+        if(data?.session) window.location.href="/espace/";
+      })();
+    })();
+  </script>
 </body>
 </html>
