@@ -261,6 +261,20 @@ input:-webkit-autofill:focus {
   border: 1px solid rgba(255,255,255,0.12) !important;
 }
 
+
+/* HERITAGE: clickable links + prevent overlay capturing taps */
+a, a:visited { color: inherit; text-decoration: none; pointer-events: auto; }
+a:hover { opacity: .92; }
+
+#bg, .bg, .background, .overlay, .glass-bg, .blur, .veil {
+  pointer-events: none !important;
+}
+
+.page, main, .hero, .card, .panel, .footer, .footer-links, .actions {
+  position: relative;
+  z-index: 2;
+}
+
 </style>
 
 <!-- HERI_SUPABASE_FORCE_START -->
@@ -323,15 +337,39 @@ input:-webkit-autofill:focus {
       </label>
 
       <div class="links">
-        <a href="#" id="createAccountLink">Créer un compte Héritage OS</a>
+        <a href="#" id="createAccountLink"><a class='ui-link' href='signup.html'>Créer un compte Héritage OS</a></a>
       </div>
 
       <div class="right">
-        <a href="#" id="forgotPasswordLink" style="color: rgba(231,236,239,.70); text-decoration:none; padding:8px 10px; border-radius:12px;">Mot de passe oublié ?</a>
+        <a href="#" id="forgotPasswordLink" style="color: rgba(231,236,239,.70); text-decoration:none; padding:8px 10px; border-radius:12px;"><a class='ui-link' href='forgot.html'>Mot de passe oublié ?</a></a>
       </div>
     </div>
   </div>
 
   
+
+<!-- HERI_LINK_ROUTER_START -->
+<!-- LINK_FIX:1770926221549009302 -->
+<script>
+(function(){
+  function go(href){ try{ window.location.href = href; }catch(e){} }
+  function bindByText(txt, href){
+    const nodes = Array.from(document.querySelectorAll("a, button, span, div, p, small"))
+      .filter(el => (el.textContent || "").trim() === txt);
+    nodes.forEach(el => {
+      el.style.cursor = "pointer";
+      el.addEventListener("click", function(e){ go(href); }, true);
+      el.addEventListener("touchend", function(e){ go(href); }, true);
+    });
+  }
+  document.addEventListener("DOMContentLoaded", function(){
+    bindByText("Créer un compte", "signup.html");
+    bindByText("Créer un compte Héritage OS", "signup.html");
+    bindByText("Mot de passe oublié ?", "forgot.html");
+  });
+})();
+</script>
+<!-- HERI_LINK_ROUTER_END -->
+
 </body>
 </html>
