@@ -28,3 +28,10 @@ a{color:var(--muted);text-decoration:none}a:hover{color:var(--text)}a:active{opa
 .note{margin-top:12px;color:var(--muted2);font-size:12px;line-height:1.3}
 input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus{-webkit-text-fill-color:var(--text)!important;box-shadow:0 0 0px 1000px rgba(0,0,0,.18) inset!important;transition:background-color 9999s ease-in-out 0s}
 @media (max-height:720px){body{overflow:auto}.footer{position:static;padding:14px 0 8px}}
+
+.hos-hidden{display:none!important;}
+.hos-terms-row{margin-top:10px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;color:var(--muted);font-size:12.5px;}
+.hos-terms-row a{color:var(--text);opacity:.85;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.18);}
+.hos-terms-row a:hover{opacity:1;}
+.hos-brand-mini{display:inline-flex;align-items:center;gap:10px;}
+.hos-brand-mini img{height:18px;width:auto;display:block;opacity:.95;}
