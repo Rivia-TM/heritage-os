@@ -1,29 +1,40 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Mot de passe oublié</title><link rel="stylesheet" href="/css/app.css?v=1"/>  <script src="js/hos-ui.js" defer></script>
-<script>window.HOS_LOGO_URL='assets/logo.png';</script>
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mot de passe oublié — HÉRITAGE OS</title>
+  <link rel="stylesheet" href="css/heritage.css" />
 </head>
-<body><div class="page"><div class="bg-glow"></div><a class="toplink" href="/">Retour</a>
-<div class="shell"><div class="card" style="text-align:left"><div class="smalltitle">HÉRITAGE</div><div class="h2">Mot de passe oublié</div>
-<div class="p">Entrez votre e-mail. Vous recevrez un lien.</div>
-<div class="field"><input id="email" type="email" placeholder="Adresse e-mail" inputmode="email" autocomplete="email"/><button class="btn-arrow" id="sendBtn">→</button></div>
-<div class="msg" id="msg"></div></div></div></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="/js/config.js?v=1"></script><script src="/js/app.js?v=1"></script>
-<script>
-(function(){
-  const {$, setMsg, makeClient} = window.HeritageApp;
-  const msg=$("#msg");
-  $("#sendBtn").addEventListener("click", async ()=>{
-    setMsg(msg,"");
-    const em=$("#email").value.trim();
-    if(!em){ setMsg(msg,"Entrez votre e-mail.","error"); return; }
-    const {client, error} = makeClient(true);
-    if(error||!client){ setMsg(msg,"Configuration Supabase manquante (URL / ANON KEY).","error"); return; }
-    $("#sendBtn").disabled=true;
-    try{
-      const redirectTo = location.origin + "/reset.html";
-      await client.auth.resetPasswordForEmail(em,{redirectTo});
-      setMsg(msg,"Si cet e-mail existe, un lien a été envoyé.","ok");
-    } finally { $("#sendBtn").disabled=false; }
-  });
-})();
-</script>
-</body></html>
+<body>
+  <div class="bg" aria-hidden="true"><div class="bg-solid"></div></div>
+
+  <main class="page">
+    <section class="auth" aria-label="Mot de passe oublié">
+      <div class="brand" aria-hidden="true">
+        <picture>
+          <source srcset="assets/logo.png" type="image/png">
+          <img class="brand-logo small" src="assets/logo.svg" alt="HÉRITAGE OS" />
+        </picture>
+      </div>
+
+      <h1 class="title">Mot de passe oublié</h1>
+
+      <form id="forgotForm" class="form">
+        <div class="field"><input class="input" name="email" type="email" placeholder="Entrez votre e-mail" autocomplete="email" required></div>
+        <button class="primary" type="submit">Envoyer le lien</button>
+        <p id="forgotStatus" class="status" role="status" aria-live="polite"></p>
+      </form>
+
+      <footer class="footer">
+        <nav class="footer-links" aria-label="Liens">
+          <a class="footer-link" href="index.html">Retour</a>
+          <a class="footer-link" href="create-account.html">Créer un compte</a>
+        </nav>
+      </footer>
+    </section>
+  </main>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
