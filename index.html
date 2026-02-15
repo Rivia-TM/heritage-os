@@ -1,24 +1,24 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="utf-8">
-<title>HÉRITAGE</title>
-<link rel="stylesheet" href="heritage.css">
-</head>
-<body>
-<div class="card">
-<h2>HÉRITAGE®</h2>
-<h1>Connectez-vous</h1>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Espace privé</title><link rel="stylesheet" href="/css/app.css?v=1"/></head>
+<body><div class="page"><div class="bg-glow"></div><a class="toplink" href="#" id="logout">Se déconnecter</a>
+<div class="shell"><div class="card" style="text-align:left"><div class="smalltitle">HÉRITAGE</div><div class="h2">Espace privé</div><div class="p" id="who">Chargement...</div><div class="msg" id="msg"></div></div></div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="/js/config.js?v=1"></script><script src="/js/app.js?v=1"></script>
+<script>
+(function(){
+  const {$, setMsg, makeClient} = window.HeritageApp;
+  const msg=$("#msg");
+  const {client, error} = makeClient(true);
 
-<input type="email" placeholder="Adresse e-mail">
-<button>Continuer</button>
+  async function guard(){
+    if(error||!client){ setMsg(msg,"Configuration Supabase manquante.","error"); return; }
+    const {data} = await client.auth.getSession();
+    if(!data?.session){ location.href="/"; return; }
+    $("#who").textContent = "Connecté: " + (data.session.user.email || "Utilisateur") + ".";
+  }
 
-<div class="links">
-<a href="terms.html">Conditions</a>
-<a href="privacy.html">Confidentialité</a>
-<a href="cookies.html">Cookies</a>
-</div>
+  $("#logout").addEventListener("click", async (e)=>{ e.preventDefault(); if(client){ await client.auth.signOut(); } location.href="/"; });
+  guard();
+})();
+</script>
 
-</div>
-</body>
-</html>
+<footer class="footer" data-legal-links="1"><div class="footer-links"><a href="/terms.html">Conditions</a><span class="sep">·</span><a href="/privacy.html">Confidentialité</a><span class="sep">·</span><a href="/cookies.html">Cookies</a></div></footer>
+</body></html>
