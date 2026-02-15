@@ -1,111 +1,54 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HÉRITAGE® OS</title>
-
-<style>
-:root{
-  --bg:#0b1623;
-  --card:#0f2236;
-  --text:#e8eef5;
-  --muted:#8fa3b8;
-  --accent:#3d5a73;
-}
-
-html,body{
-  margin:0;
-  height:100%;
-  font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;
-  background:radial-gradient(circle at 50% 30%,#13283d,var(--bg));
-  color:var(--text);
-}
-
-.wrap{
-  height:100%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.card{
-  background:rgba(15,34,54,.85);
-  padding:40px;
-  border-radius:18px;
-  width:420px;
-  text-align:center;
-  box-shadow:0 20px 60px rgba(0,0,0,.5);
-}
-
-.logo{
-  font-size:18px;
-  letter-spacing:6px;
-  opacity:.7;
-  margin-bottom:20px;
-}
-
-h1{
-  font-size:22px;
-  margin-bottom:20px;
-}
-
-input{
-  width:100%;
-  padding:14px;
-  border-radius:10px;
-  border:none;
-  margin-top:10px;
-  font-size:16px;
-}
-
-button{
-  margin-top:15px;
-  width:100%;
-  padding:14px;
-  border:none;
-  border-radius:10px;
-  background:var(--accent);
-  color:white;
-  font-size:16px;
-  cursor:pointer;
-}
-
-.links{
-  margin-top:20px;
-  font-size:13px;
-}
-
-.links a{
-  color:var(--muted);
-  margin:0 10px;
-  text-decoration:none;
-}
-</style>
-
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>HÉRITAGE OS</title>
+  <link rel="stylesheet" href="heritage.css"/>
 </head>
-
 <body>
+  <div class="wrap">
+    <div class="card">
+      <div class="brand">HÉRITAGE®</div>
+      <h1>Connectez-vous<br/>pour accéder à votre espace.</h1>
+      <p class="sub">Accès sécurisé. Vérification côté serveur. Aucune donnée sensible n’est stockée dans le navigateur en clair.</p>
 
-<div class="wrap">
-  <div class="card">
+      <form class="row" onsubmit="return false;">
+        <input class="input" id="email" type="email" placeholder="Adresse e-mail" autocomplete="email" />
+        <button class="btn" id="go" aria-label="Continuer">→</button>
+      </form>
 
-    <div class="logo">HÉRITAGE®</div>
+      <div class="meta">
+        <label><input type="checkbox" id="remember" /> Se souvenir de moi</label>
+        <div class="links">
+          <a href="#" id="create">Créer un compte</a>
+          <a href="#" id="reset">Mot de passe oublié</a>
+        </div>
+      </div>
 
-    <h1>Connectez-vous à votre espace</h1>
-
-    <input placeholder="Adresse e-mail">
-
-    <button>Continuer</button>
-
-    <div class="links">
-      <a href="#">Conditions</a>
-      <a href="#">Confidentialité</a>
-      <a href="#">Cookies</a>
+      <div class="small" style="margin-top:14px;">
+        Astuce: si la page ne se met pas à jour sur iPad, fais un “hard refresh” (rechargement forcé) et vide le cache Safari pour ce site.
+      </div>
     </div>
-
   </div>
-</div>
 
+  <div class="footer">
+    <div class="footer-links">
+      <a href="terms.html">Conditions</a>
+      <a href="privacy.html">Confidentialité</a>
+      <a href="cookies.html">Cookies</a>
+    </div>
+  </div>
+
+<script>
+  // Placeholder UI hooks. Tu reconnecteras tes vraies routes/JS ensuite.
+  const email = document.getElementById('email');
+  document.getElementById('go').onclick = () => {
+    if(!email.value) { email.focus(); return; }
+    alert("OK (placeholder). Branche ici ton login réel.");
+  };
+  document.getElementById('create').onclick = (e) => { e.preventDefault(); alert("Créer un compte (placeholder)."); };
+  document.getElementById('reset').onclick  = (e) => { e.preventDefault(); alert("Reset (placeholder)."); };
+</script>
 </body>
 </html>
