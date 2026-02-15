@@ -10,3 +10,25 @@ p,li{color:var(--muted);line-height:1.55;font-size:14px}ul{padding-left:18px}
 .footer{width:100%;display:flex;justify-content:center;padding:18px 12px}
 .footer-links{font-size:13px;opacity:.85}.footer-links a{color:rgba(233,238,243,.85)}
 .footer-links a:hover{color:rgba(233,238,243,1)}.footer-links .sep{margin:0 10px;opacity:.6}
+
+/* HÉRITAGE_FOOTER_PATCH_V1 */
+.site-footer{
+  margin-top:24px;
+  padding-top:14px;
+  border-top:1px solid rgba(255,255,255,.12);
+  display:flex;
+  justify-content:center;
+  gap:18px;
+  flex-wrap:wrap;
+  font-size:13px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
+.site-footer a{
+  color:var(--muted, rgba(255,255,255,.70));
+  text-decoration:none;
+}
+.site-footer a:hover{ color:var(--text, rgba(255,255,255,.92)); }
+.site-footer a[aria-current="page"]{ color:var(--text, rgba(255,255,255,.92)); }
+.legal h2{ margin-top:18px; }
+.legal h3{ margin-top:14px; }
