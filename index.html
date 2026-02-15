@@ -1,59 +1,85 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>HÉRITAGE OS</title>
-  <link rel="stylesheet" href="css/heritage.css" />
-  <link rel="stylesheet" href="/heritage.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HÉRITAGE®</title>
 
-<style id="force-ui">
-/* Fallback if CSS path gets messed up by Vercel/Safari */
-a{color:#b7c3cd !important; text-decoration:none !important}
-a:hover{color:#e9eef3 !important}
+<style>
+body{
+margin:0;
+font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial;
+background:radial-gradient(circle at 30% 30%,#1e3a5f,#0b1622);
+color:white;
+display:flex;
+align-items:center;
+justify-content:center;
+height:100vh;
+}
+
+.card{
+background:rgba(20,30,40,0.9);
+padding:40px;
+border-radius:16px;
+width:420px;
+text-align:center;
+box-shadow:0 20px 60px rgba(0,0,0,0.5);
+}
+
+input{
+width:100%;
+padding:12px;
+border-radius:8px;
+border:none;
+margin-top:20px;
+font-size:16px;
+}
+
+button{
+margin-top:20px;
+padding:12px 20px;
+border:none;
+border-radius:8px;
+background:#3b6ea8;
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+.footer{
+position:fixed;
+bottom:20px;
+width:100%;
+text-align:center;
+color:#aaa;
+font-size:14px;
+}
+
+.footer a{
+color:#aaa;
+margin:0 10px;
+text-decoration:none;
+}
 </style>
 
 </head>
 <body>
-<main class="wrap">
-  <section class="card" role="region" aria-label="Connexion">
-    <div class="brand">HÉRITAGE<sup>®</sup></div>
-    <h1>Connectez-vous<br/>pour accéder à votre espace.</h1>
 
-    <form id="loginForm" class="form" autocomplete="on">
-      <div class="row">
-        <input id="email" name="email" type="email" inputmode="email" autocomplete="email"
-               placeholder="Adresse e-mail" required />
-        <button id="submitBtn" type="submit" aria-label="Continuer">→</button>
-      </div>
+<div class="card">
+<h2>HÉRITAGE®</h2>
+<p>Connectez-vous pour accéder à votre espace.</p>
 
-      <div class="meta">
-        <label class="remember">
-          <input id="remember" type="checkbox" />
-          <span>Se souvenir de moi</span>
-        </label>
+<input placeholder="Adresse e-mail">
 
-        <nav class="links" aria-label="Accès">
-          <a href="/signup.html">Créer un compte</a>
-          <a href="/forgot.html">Mot de passe oublié</a>
-        </nav>
-      </div>
+<button>Continuer</button>
 
-      <p id="msg" class="msg" aria-live="polite"></p>
-    </form>
-  </section>
-</main>
+</div>
 
-<footer class="footer">
-  <nav class="footer-links" aria-label="Informations légales">
-    <a href="/terms.html">Conditions</a>
-    <span class="sep">·</span>
-    <a href="/privacy.html">Confidentialité</a>
-    <span class="sep">·</span>
-    <a href="/cookies.html">Cookies</a>
-  </nav>
-</footer>
+<div class="footer">
+<a href="#">Conditions</a>
+<a href="#">Confidentialité</a>
+<a href="#">Cookies</a>
+</div>
 
-<script src="js/app.js"></script>
 </body>
 </html>
