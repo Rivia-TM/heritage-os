@@ -5,16 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>HÉRITAGE OS</title>
   <link rel="stylesheet" href="css/heritage.css" />
+  <link rel="stylesheet" href="/heritage.css" />
+
+<style id="force-ui">
+/* Fallback if CSS path gets messed up by Vercel/Safari */
+a{color:#b7c3cd !important; text-decoration:none !important}
+a:hover{color:#e9eef3 !important}
+</style>
+
 </head>
 <body>
 <main class="wrap">
-  <section class="card auth-card" role="region" aria-label="Connexion">
+  <section class="card" role="region" aria-label="Connexion">
     <div class="brand">HÉRITAGE<sup>®</sup></div>
-
     <h1>Connectez-vous<br/>pour accéder à votre espace.</h1>
 
     <form id="loginForm" class="form" autocomplete="on">
-      <label class="sr-only" for="email">Adresse e-mail</label>
       <div class="row">
         <input id="email" name="email" type="email" inputmode="email" autocomplete="email"
                placeholder="Adresse e-mail" required />
