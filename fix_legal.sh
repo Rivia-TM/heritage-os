@@ -1,3 +1,9 @@
+#!/bin/bash
+set -e
+
+echo "Création pages légales solides..."
+
+cat > terms.html << 'EOT'
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -28,3 +34,10 @@
 </div>
 </body>
 </html>
+EOT
+
+git add .
+git commit -m "legal pages hardened"
+git push
+
+echo "Terminé. Vercel va redéployer."

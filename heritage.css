@@ -32,3 +32,58 @@ p,li{color:var(--muted);line-height:1.55;font-size:14px}ul{padding-left:18px}
 .site-footer a[aria-current="page"]{ color:var(--text, rgba(255,255,255,.92)); }
 .legal h2{ margin-top:18px; }
 .legal h3{ margin-top:14px; }
+
+/* H-LEGAL-STYLES (marker) */
+.legal-footer{
+  margin-top:18px;
+  padding-top:14px;
+  border-top:1px solid rgba(255,255,255,.10);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  text-align:center;
+  font-size:12px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+}
+.legal-footer a{
+  color: rgba(238,238,243,.75);
+  text-decoration:none;
+}
+.legal-footer a:hover{
+  color: rgba(238,238,243,.95);
+  text-decoration:none;
+}
+.legal-footer .sep{
+  color: rgba(238,238,243,.25);
+}
+
+/* Home footer links (clean, centered, non-purple) */
+.site-footer{
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:16px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:14px;
+  font-size:12px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  z-index:50;
+  pointer-events:auto;
+}
+.site-footer a{
+  color: rgba(238,238,243,.55);
+  text-decoration:none;
+}
+.site-footer a:hover{
+  color: rgba(238,238,243,.90);
+}
+.site-footer .sep{ color: rgba(238,238,243,.20); }
+
+/* Make sure default link color does not become browser-purple */
+a{ -webkit-tap-highlight-color: rgba(255,255,255,.08); }
