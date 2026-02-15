@@ -1,0 +1,12 @@
+:root{--bg:#071018;--panel:#0b1b26;--text:#e9eef3;--muted:#b7c3cd;--line:rgba(255,255,255,.10);--accent:#3D5A73}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text)}
+a{color:var(--muted);text-decoration:none}a:hover{color:var(--text)}
+.wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px}
+.card{width:min(820px,94vw);background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:26px}
+.brand{letter-spacing:.22em;font-weight:700;color:var(--muted);text-transform:uppercase;font-size:12px}
+h1{margin:10px 0 8px;font-size:26px}h2{margin:18px 0 8px;font-size:16px}
+p,li{color:var(--muted);line-height:1.55;font-size:14px}ul{padding-left:18px}
+.footer{width:100%;display:flex;justify-content:center;padding:18px 12px}
+.footer-links{font-size:13px;opacity:.85}.footer-links a{color:rgba(233,238,243,.85)}
+.footer-links a:hover{color:rgba(233,238,243,1)}.footer-links .sep{margin:0 10px;opacity:.6}
