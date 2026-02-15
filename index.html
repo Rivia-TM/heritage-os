@@ -3,27 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HÉRITAGE®</title>
+<title>HÉRITAGE</title>
 
 <style>
 body{
 margin:0;
-font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial;
-background:radial-gradient(circle at 30% 30%,#1e3a5f,#0b1622);
-color:white;
+height:100vh;
 display:flex;
 align-items:center;
 justify-content:center;
-height:100vh;
+background:linear-gradient(180deg,#0b1622,#13293d);
+font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;
+color:white;
 }
 
 .card{
-background:rgba(20,30,40,0.9);
+background:rgba(20,35,55,0.85);
 padding:40px;
 border-radius:16px;
-width:420px;
+box-shadow:0 20px 60px rgba(0,0,0,0.4);
+width:340px;
 text-align:center;
-box-shadow:0 20px 60px rgba(0,0,0,0.5);
+}
+
+.logo{
+letter-spacing:4px;
+opacity:0.7;
+margin-bottom:20px;
 }
 
 input{
@@ -36,11 +42,12 @@ font-size:16px;
 }
 
 button{
-margin-top:20px;
-padding:12px 20px;
+margin-top:15px;
+padding:12px;
+width:100%;
 border:none;
 border-radius:8px;
-background:#3b6ea8;
+background:#2d6cdf;
 color:white;
 font-size:16px;
 cursor:pointer;
@@ -48,17 +55,9 @@ cursor:pointer;
 
 .footer{
 position:fixed;
-bottom:20px;
-width:100%;
-text-align:center;
-color:#aaa;
-font-size:14px;
-}
-
-.footer a{
-color:#aaa;
-margin:0 10px;
-text-decoration:none;
+bottom:15px;
+font-size:13px;
+opacity:0.6;
 }
 </style>
 
@@ -66,19 +65,17 @@ text-decoration:none;
 <body>
 
 <div class="card">
-<h2>HÉRITAGE®</h2>
-<p>Connectez-vous pour accéder à votre espace.</p>
+<div class="logo">HÉRITAGE®</div>
+
+<h2>Connexion</h2>
 
 <input placeholder="Adresse e-mail">
-
-<button>Continuer</button>
+<button>Accéder</button>
 
 </div>
 
 <div class="footer">
-<a href="#">Conditions</a>
-<a href="#">Confidentialité</a>
-<a href="#">Cookies</a>
+Conditions · Confidentialité · Cookies
 </div>
 
 </body>
