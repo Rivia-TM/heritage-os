@@ -44,3 +44,29 @@ button{
 }
 button.primary{background:rgba(61,90,115,.45); border-color:rgba(61,90,115,.65)}
 .small{font-size:12px;color:var(--muted)}
+
+/* FOOTER_LINKS__START */
+.footer {
+  position: fixed; left: 0; right: 0; bottom: 18px;
+  z-index: 50; display: flex; justify-content: center;
+  pointer-events: none;
+}
+.footer a{ pointer-events:auto; }
+.footer-links {
+  display: inline-flex; gap: 16px; align-items: center; justify-content: center; flex-wrap: wrap;
+  padding: 10px 14px;
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 999px;
+  background: rgba(0,0,0,.14);
+  backdrop-filter: blur(10px);
+}
+.footer-links a {
+  color: rgba(233,238,243,.80);
+  text-decoration: none;
+  font-weight: 600;
+  letter-spacing: .06em;
+  font-size: 13px;
+}
+.footer-links a:hover { color: rgba(233,238,243,.98); }
+/* FOOTER_LINKS__END */
+
