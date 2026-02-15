@@ -1,54 +1,24 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>HÉRITAGE OS</title>
-  <link rel="stylesheet" href="heritage.css"/>
+<meta charset="utf-8">
+<title>HÉRITAGE</title>
+<link rel="stylesheet" href="heritage.css">
 </head>
 <body>
-  <div class="wrap">
-    <div class="card">
-      <div class="brand">HÉRITAGE®</div>
-      <h1>Connectez-vous<br/>pour accéder à votre espace.</h1>
-      <p class="sub">Accès sécurisé. Vérification côté serveur. Aucune donnée sensible n’est stockée dans le navigateur en clair.</p>
+<div class="card">
+<h2>HÉRITAGE®</h2>
+<h1>Connectez-vous</h1>
 
-      <form class="row" onsubmit="return false;">
-        <input class="input" id="email" type="email" placeholder="Adresse e-mail" autocomplete="email" />
-        <button class="btn" id="go" aria-label="Continuer">→</button>
-      </form>
+<input type="email" placeholder="Adresse e-mail">
+<button>Continuer</button>
 
-      <div class="meta">
-        <label><input type="checkbox" id="remember" /> Se souvenir de moi</label>
-        <div class="links">
-          <a href="#" id="create">Créer un compte</a>
-          <a href="#" id="reset">Mot de passe oublié</a>
-        </div>
-      </div>
+<div class="links">
+<a href="terms.html">Conditions</a>
+<a href="privacy.html">Confidentialité</a>
+<a href="cookies.html">Cookies</a>
+</div>
 
-      <div class="small" style="margin-top:14px;">
-        Astuce: si la page ne se met pas à jour sur iPad, fais un “hard refresh” (rechargement forcé) et vide le cache Safari pour ce site.
-      </div>
-    </div>
-  </div>
-
-  <div class="footer">
-    <div class="footer-links">
-      <a href="terms.html">Conditions</a>
-      <a href="privacy.html">Confidentialité</a>
-      <a href="cookies.html">Cookies</a>
-    </div>
-  </div>
-
-<script>
-  // Placeholder UI hooks. Tu reconnecteras tes vraies routes/JS ensuite.
-  const email = document.getElementById('email');
-  document.getElementById('go').onclick = () => {
-    if(!email.value) { email.focus(); return; }
-    alert("OK (placeholder). Branche ici ton login réel.");
-  };
-  document.getElementById('create').onclick = (e) => { e.preventDefault(); alert("Créer un compte (placeholder)."); };
-  document.getElementById('reset').onclick  = (e) => { e.preventDefault(); alert("Reset (placeholder)."); };
-</script>
+</div>
 </body>
 </html>
